@@ -2,4 +2,4 @@
 
 
 class Sentence:
-    
+    data = None
