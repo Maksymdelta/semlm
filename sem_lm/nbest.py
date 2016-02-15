@@ -1,0 +1,7 @@
+
+
+
+class NBest:
+    sentences = None
+    
+
