@@ -1,7 +1,7 @@
 from distutils.core import setup
 
 setup(
-    name='sem-lm',
+    name='semlm',
     version='0.1',
     author='Ben Lambert',
     author_email='belambert@mac.com',
