@@ -39,3 +39,16 @@ def nbest_entries_to_nbests(entries):
         nbest = NBest(id_, entries)
         nbests.append(nbest)
     return nbests
+
+
+def read_nbests(filename):
+    "Read a Kaldi n-best file."
+    entries = []
+    with open(filename) as f:
+        for line in f:
+            id_rank, words =  line.lsplit(maxsplit=1)
+            id_, rank = id_rank.rsplit('_', maxsplit=1)
+            print(id_)
+            print(words)
+            
+    return entries
