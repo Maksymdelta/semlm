@@ -5,4 +5,3 @@ class Evaluation:
     dels = None
     subs = None
     ref_len = None
-
