@@ -1,14 +1,14 @@
 
 
 class Sentence:
-    def __init__(self, id_, words):
+    def __init__(self, id_, words, acscore=None, lmscore=None):
         self.id_ = id_
         self.words = words
-        self.acoustic_score = None
-        self.lm_score = None
+        self.acscore = acscore
+        self.lmscore = lmscore
 
     def __str__(self):
         sentence_string = " ".join(self.words).lower()
-        return "<{} (ac:{}, lm:{} )>".format(sentence_string,
-                                             self.acoustic_score,
-                                             self.lm_score)
+        return "<{} (ac: {:,.2f}, lm: {:,.2f} )>".format(sentence_string,
+                                             self.acscore,
+                                             self.lmscore)
