@@ -1,4 +1,3 @@
-
 from semlm.evaluation import Evaluation
 from editdistance.editdistance import edit_distance
 from asr_evaluation.asr_evaluation import print_diff as eval_print_diff
@@ -6,6 +5,7 @@ from editdistance.editdistance import SequenceMatcher
 
 
 REFERENCES = {}
+
 
 def sentence_editdistance(s1, s2):
     distance, matches = edit_distance(s1.words, s2.words)
@@ -32,4 +32,3 @@ def print_diff(s1, s2):
     b = s2.words
     sm = SequenceMatcher(a, b)
     eval_print_diff(sm, s1.words, s2.words)
-    

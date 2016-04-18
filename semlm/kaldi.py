@@ -31,13 +31,15 @@ def read_nbest_file(f):
             break
         id_ = entry[0]
         id_ = id_.rsplit('-', maxsplit=1)[0]
-        if prev_id is None: prev_id = id_
+        if not prev_id:
+            prev_id = id_
         if id_ != prev_id:
             yield NBest(prev_id, nbest)
             nbest = []
             prev_id = id_
         s = entry_lines_to_sentence(entry)
         nbest.append(s)
+
 
 def read_nbest_entry_lines(f):
     entry_lines = []
@@ -64,9 +66,8 @@ def entry_lines_to_sentence(lines):
             assert(int(s1) == int(s2) - 1)
             score_parts = scores.split(',')
             lmscores.append(float(score_parts[0]))
-            acscores.append(float(score_parts[1]))           
+            acscores.append(float(score_parts[1]))
             words.append(tokens[2])
     lmscore = sum(lmscores)
     acscore = sum(acscores)
     return Sentence(id_, words, lmscore=lmscore, acscore=acscore)
-

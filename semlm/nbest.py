@@ -1,8 +1,8 @@
 import sys
-
 from semlm.sentence import Sentence
 from semlm.evaluation_util import get_global_reference
 from semlm.evaluation_util import print_diff
+
 
 class NBest:
 
@@ -51,8 +51,6 @@ class NBest:
         else:
             print_str += '    No reference found.\n'
         print_str += '{:3d} '.format(1) + str(hyp) + '\n'
-        print_str += '{:3d} '.format(best_rank + 1) + str(best) + '\n'        
+        print_str += '{:3d} '.format(best_rank + 1) + str(best) + '\n'
         print(print_str)
-
         print_diff(best, hyp)
-        

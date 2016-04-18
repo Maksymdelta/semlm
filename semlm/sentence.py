@@ -19,5 +19,5 @@ class Sentence:
         print_str = print_str.format(self.acscore,
                                      self.lmscore,
                                      eval_str,
-                                     sentence_str)        
+                                     sentence_str)
         return print_str
