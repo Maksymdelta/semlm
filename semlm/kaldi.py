@@ -3,6 +3,8 @@ from semlm.sentence import Sentence
 
 
 def read_transcript_table(f):
+    """Given a file, read in the transcripts into a hash table
+    indexed by IDs."""
     trans_table = {}
     trans = read_transcript(f)
     for s in trans:

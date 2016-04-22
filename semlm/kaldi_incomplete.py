@@ -1,24 +1,6 @@
-
-
 from semlm.kaldi import read_nbest_entry_lines
 
 # These aren't working yet...
-
-
-    # def __init__(self, entries):
-    #     id_ = entries[0][0]
-    #     # Make sure all the IDs match
-    #     assert(all(map(lambda x: x[0] == id_, entries)))
-    #     self.id_ = id_
-    #     assert(all(map(lambda x: x[0] == x[1][1]-1, enumerate(entries))))
-    #     sentences = []
-    #     for entry in entries:
-    #         id_ = entry[0]
-    #         text = entry[2]
-    #         s = Sentence(id_, text)
-    #         sentences.append(s)
-    #     self.sentences = sentences
-
 
 def read_nbest_file(f):
     "Read a Kaldi n-best file."
