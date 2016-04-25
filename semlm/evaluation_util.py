@@ -1,10 +1,11 @@
+from collections import OrderedDict
+
 from semlm.evaluation import Evaluation
 from editdistance.editdistance import edit_distance
 from asr_evaluation.asr_evaluation import print_diff as eval_print_diff
 from editdistance.editdistance import SequenceMatcher
 
-
-REFERENCES = {}
+REFERENCES = OrderedDict()
 
 
 def sentence_editdistance(s1, s2):
@@ -17,26 +18,33 @@ def sentence_editdistance(s1, s2):
 def evaluate(ref_table, s):
     """Given a sentence and a reference table, create and return an
     Evaluation object."""
-    ref = ref_table[s.id_]
+    ref = ref_table.get(s.id_)
+    if ref is None:
+        raise Exception('No reference loaded for ID: {}'.format(s.id_))
     distance, matches = edit_distance(ref.words, s.words)
     eval_ = Evaluation(len(ref.words), matches, distance)
     return eval_
 
 
 def set_global_references(ref_file):
-    """Given a reference file, read it into the global table wit the name
-    REFERECENS."""
+    """Given a reference file, read it into the global table with the name
+    REFERENCES."""
+    global REFERENCES
     REFERENCES = read_transcript_table(ref_file)
 
 
 def get_global_reference(id_):
     """Look-up ASR references by id."""
+    global REFERENCES
     return REFERENCES.get(id_)
 
 
-def print_diff(s1, s2):
+def print_diff(s1, s2, prefix1='REF:', prefix2='HYP:'):
     """Print a readable diff between two sentences."""
     a = s1.words
     b = s2.words
     sm = SequenceMatcher(a, b)
-    eval_print_diff(sm, s1.words, s2.words)
+    eval_print_diff(sm, s1.words, s2.words, prefix1=prefix1, prefix2=prefix2)
+
+def sum_evals(evals):
+    return sum(evals[1:], evals[0])

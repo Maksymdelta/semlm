@@ -38,3 +38,8 @@ class Evaluation():
                  "Errors:     {:>10,d}".format(self.errs),
                  "WER:        {:>10.2%}".format(self.wer())]
         return '\n'.join(lines)
+
+    def __cmp__(self, other):
+        self.wer() - other.wer()
+
+        

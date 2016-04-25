@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 
 import argparse
+import semlm.evaluation_util
+
 from semlm.kaldi import read_nbest_file
-# from semlm.kaldi_better import read_nbest_file
 from semlm.kaldi import read_transcript_table
 from semlm.evaluation_util import evaluate
 from semlm.evaluation_util import REFERENCES
+from semlm.nbest_util import evaluate_nbests
 
 
 def main():
@@ -14,21 +16,16 @@ def main():
     parser.add_argument("ref_file", type=argparse.FileType('r'))
     args = parser.parse_args()
 
-    nbests = read_nbest_file(args.nbest_file)
+    nbests = list(read_nbest_file(args.nbest_file))
     refs = read_transcript_table(args.ref_file)
-    REFERENCES = refs
+    semlm.evaluation_util.REFERENCES = refs
     evals = []
+
+    overall_eval = evaluate_nbests(nbests)
     for nbest in nbests:
-        id_ = nbest.id_
-        ref = refs[id_]
-        for s in nbest.sentences:
-            e = evaluate(refs, s)
-            s.eval_ = e
-            evals.append(e)
-            # print(s)
         # print(nbest)
         nbest.print_ref_hyp_best()
-    overall_eval = sum(evals[1:], evals[0])
+        # pass
     print(overall_eval)
 
 if __name__ == "__main__":

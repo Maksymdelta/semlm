@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 from semlm.nbest import NBest
 from semlm.sentence import Sentence
 
@@ -5,7 +7,7 @@ from semlm.sentence import Sentence
 def read_transcript_table(f):
     """Given a file, read in the transcripts into a hash table
     indexed by IDs."""
-    trans_table = {}
+    trans_table = OrderedDict()
     trans = read_transcript(f)
     for s in trans:
         trans_table[s.id_] = s
@@ -36,7 +38,7 @@ def read_nbest_file(f):
         if not prev_id:
             prev_id = id_
         if id_ != prev_id:
-            yield NBest(prev_id, nbest)
+            yield NBest(nbest, prev_id)
             nbest = []
             prev_id = id_
         s = entry_lines_to_sentence(entry)
