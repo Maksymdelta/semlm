@@ -4,10 +4,9 @@ from semlm.evaluation_util import get_global_reference
 from semlm.evaluation_util import print_diff
 from semlm.nbest_util import nbest_best_sentence
 
-
 class NBest:
     """Represents an n-best list of ASR hypotheses."""
-    
+
     sentences = None
     id_ = None
 
@@ -27,7 +26,7 @@ class NBest:
         print_str += 'ID: {} (#{} is best)\n'.format(self.id_, best_rank)
         # print_str += 'ID: {}\n'.format(self.id_)
         for i, s in enumerate(self.sentences):
-            print_str += '{:3d} '.format(i+1) + str(s)
+            print_str += '{:3d} '.format(i + 1) + str(s)
             if best_rank == i:
                 print_str += ' **'
             print_str += '\n'
@@ -40,15 +39,17 @@ class NBest:
         hyp = self.sentences[0]
         best = nbest_best_sentence(self)
         best_rank = self.sentences.index(best)
-        # print_str = ''
-        # print_str += 'ID: {} (#{} is best)\n'.format(self.id_, best_rank)
-        # if get_global_reference(self.id_):
-        #     print_str += '{:3} '.format('') + str(ref) + '\n'
-        # else:
-        #     print_str += '    No reference found.\n'
-        # print_str += '{:3d} '.format(1) + str(hyp) + '\n'
-        # print_str += '{:3d} '.format(best_rank + 1) + str(best) + '\n'
-        # print(ref)
         print_diff(ref, best, prefix1='REF: ', prefix2='BEST:')
         print_diff(best, hyp, prefix1='BEST:', prefix2='HYP: ')
-        print('='*60)
+        print('=' * 60)
+
+# This is another possible way to print the ref/hyp/best
+# print_str = ''
+# print_str += 'ID: {} (#{} is best)\n'.format(self.id_, best_rank)
+# if get_global_reference(self.id_):
+#     print_str += '{:3} '.format('') + str(ref) + '\n'
+# else:
+#     print_str += '    No reference found.\n'
+# print_str += '{:3d} '.format(1) + str(hyp) + '\n'
+# print_str += '{:3d} '.format(best_rank + 1) + str(best) + '\n'
+# print(ref)

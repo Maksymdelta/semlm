@@ -1,8 +1,6 @@
 from collections import OrderedDict
-
 from semlm.nbest import NBest
 from semlm.sentence import Sentence
-
 
 def read_transcript_table(f):
     """Given a file, read in the transcripts into a hash table
@@ -13,7 +11,6 @@ def read_transcript_table(f):
         trans_table[s.id_] = s
     return trans_table
 
-
 def read_transcript(f):
     trans = []
     for line in f:
@@ -22,7 +19,6 @@ def read_transcript(f):
         s = Sentence(id_, words.split())
         trans.append(s)
     return trans
-
 
 def read_nbest_file(f):
     "Read a Kaldi n-best file."
@@ -44,7 +40,6 @@ def read_nbest_file(f):
         s = entry_lines_to_sentence(entry)
         nbest.append(s)
 
-
 def read_nbest_entry_lines(f):
     entry_lines = []
     while True:
@@ -55,7 +50,6 @@ def read_nbest_entry_lines(f):
             return entry_lines
         else:
             entry_lines.append(line.strip())
-
 
 def entry_lines_to_sentence(lines):
     words = []

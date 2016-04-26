@@ -1,5 +1,4 @@
 
-
 class Sentence:
     """Represents a sentence or utterance."""
 
@@ -27,3 +26,6 @@ class Sentence:
 
     def wer(self):
         return self.eval_.wer()
+
+    def score(self, lmwt=10):
+        return self.acscore + self.lmscore * lmwt

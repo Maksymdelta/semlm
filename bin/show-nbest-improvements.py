@@ -19,7 +19,6 @@ def main():
     nbests = list(read_nbest_file(args.nbest_file))
     refs = read_transcript_table(args.ref_file)
     semlm.evaluation_util.REFERENCES = refs
-    evals = []
 
     overall_eval = evaluate_nbests(nbests)
     for nbest in nbests:

@@ -7,7 +7,6 @@ from semlm.kaldi import read_transcript
 from semlm.kaldi import read_transcript_table
 from semlm.evaluation_util import evaluate
 
-
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("ref_file")

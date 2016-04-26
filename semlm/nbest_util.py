@@ -2,7 +2,6 @@ import semlm.evaluation_util
 from semlm.evaluation_util import evaluate
 from semlm.evaluation_util import sum_evals
 
-
 def nbest_oracle_sort(nbest, n=None):
     nbest = nbest.copy()
     if n: nbest.sentences = nbest.sentences[:n]
@@ -17,6 +16,7 @@ def nbest_best_sentence(nbest, n=None):
 def nbest_oracle_eval(nbest, n=None):
     return nbest_best_sentence(nbest, n=n).eval_
 
+# This does more than its name implies
 def evaluate_nbest(nbest, force=False):
     id_ = nbest.id_
     for s in nbest.sentences:
@@ -27,11 +27,11 @@ def evaluate_nbest(nbest, force=False):
 
 def evaluate_nbests(nbests):
     evals = list(map(evaluate_nbest, nbests))
-    return sum(evals[1:], evals[0])
+    return sum_evals(evals)
 
 def evaluate_nbests_oracle(nbests):
     evals = list(map(nbest_oracle_eval, nbests))
-    return sum(evals[1:], evals[0])
+    return sum_evals(evals)
 
 def evals_by_depth(nbests, n=100):
     evals_by_depth = [None] * n

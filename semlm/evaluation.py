@@ -1,5 +1,3 @@
-
-
 # In my previous version, I had a couple versions of evaluation object.
 # Some contained the words, etc. that caused errors.
 # We can use this same object for sentence error rate.
@@ -41,5 +39,3 @@ class Evaluation():
 
     def __cmp__(self, other):
         self.wer() - other.wer()
-
-        
