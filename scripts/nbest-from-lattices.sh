@@ -1,7 +1,10 @@
 #~/bin/sh -x
 
 n=100
-acoustic_scale=0.1
+# acoustic_scale=0.1
+
+# This is 1/14
+acoustic_scale=0.07
 # folder=/home/bel/kaldi-run/librispeech/s5/exp/tri5b/decode_fglarge_dev_other
 folder=/home/bel/kaldi-run/librispeech/s5/exp/tri5b/decode_fglarge_dev_clean
 tasks=80
