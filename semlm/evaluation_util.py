@@ -42,4 +42,7 @@ def print_diff(s1, s2, prefix1='REF:', prefix2='HYP:'):
     eval_print_diff(sm, s1.words, s2.words, prefix1=prefix1, prefix2=prefix2)
 
 def sum_evals(evals):
-    return sum(evals[1:], evals[0])
+    if len(evals) == 1:
+        return evals[0]
+    else:
+        return sum(evals[1:], evals[0])

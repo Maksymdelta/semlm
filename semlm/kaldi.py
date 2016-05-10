@@ -1,6 +1,12 @@
+import logging
+
 from collections import OrderedDict
+
 from semlm.nbest import NBest
 from semlm.sentence import Sentence
+
+# logger = logging.getLogger('this_app')
+# logger.setLevel(logging.DEBUG)
 
 def read_transcript_table(f):
     """Given a file, read in the transcripts into a hash table
@@ -22,30 +28,42 @@ def read_transcript(f):
 
 def read_nbest_file(f):
     "Read a Kaldi n-best file."
+    nbests = []
     nbest = []
     current_id = None
     prev_id = None
+    id_ = None
     while True:
-        entry = read_nbest_entry_lines(f)  # this is a sentence.
+        print('|NBESTS| = {}'.format(len(nbests)))
+        print('|NBEST| = {}'.format(len(nbest)))
+        entry = read_nbest_entry_lines(f)  # this is a sentence, which is spread across several lines
+        print('ENTRY: ' + str(entry))
         if not entry:
+            nbests.append(NBest(nbest, id_))
+            # print(nbest)
             break
+            # yield NBest(nbest, id_)
         id_ = entry[0]
         id_ = id_.rsplit('-', maxsplit=1)[0]
         if not prev_id:
             prev_id = id_
         if id_ != prev_id:
-            yield NBest(nbest, prev_id)
+            nbests.append(NBest(nbest, prev_id))
             nbest = []
             prev_id = id_
         s = entry_lines_to_sentence(entry)
         nbest.append(s)
-
+    return nbests
+        
 def read_nbest_entry_lines(f):
     entry_lines = []
     while True:
         line = f.readline()
         if line == '':
-            return None
+            if len(entry_lines) == 0:
+                return None
+            else:
+                return entry_lines
         if line == '\n':
             return entry_lines
         else:
@@ -69,3 +87,28 @@ def entry_lines_to_sentence(lines):
     lmscore = sum(lmscores)
     acscore = sum(acscores)
     return Sentence(id_, words, lmscore=lmscore, acscore=acscore)
+
+# def read_nbest_file(f):
+#     "Read a Kaldi n-best file."
+#     nbest = []
+#     current_id = None
+#     prev_id = None
+#     id_ = None
+#     while True:
+#         entry = read_nbest_entry_lines(f)  # this is a sentence.
+#         # logger.info('TEST')
+#         # print(entry)        
+#         if not entry:
+#             # print(nbest)
+#             break
+#             # yield NBest(nbest, id_)
+#         id_ = entry[0]
+#         id_ = id_.rsplit('-', maxsplit=1)[0]
+#         if not prev_id:
+#             prev_id = id_
+#         if id_ != prev_id:
+#             yield NBest(nbest, prev_id)
+#             nbest = []
+#             prev_id = id_
+#         s = entry_lines_to_sentence(entry)
+#         nbest.append(s)
