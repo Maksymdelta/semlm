@@ -19,14 +19,15 @@ from semlm.scores import monotone
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("nbest_file", type=argparse.FileType('r'))
-    parser.add_argument("ref_file", type=argparse.FileType('r'))
+    parser.add_argument("ref_file", nargs='?', type=argparse.FileType('r')) # optional
     args = parser.parse_args()
     colorama.init()
     nbests = list(read_nbest_file(args.nbest_file))
-    refs = read_transcript_table(args.ref_file)
-    semlm.evaluation_util.REFERENCES = refs
-    overall_eval = evaluate_nbests(nbests)
-    print(nbests)
+    if args.ref_file:
+        refs = read_transcript_table(args.ref_file)
+        semlm.evaluation_util.REFERENCES = refs
+        overall_eval = evaluate_nbests(nbests)
+    # print(nbests)
     for nbest in nbests:
         print('NBEST:')
         print(nbest)

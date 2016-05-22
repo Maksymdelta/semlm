@@ -21,17 +21,26 @@ class NBest:
         """Returns a string representation of the object."""
         # This might be relatively slow because of all the string concatenation
         print_str = ''
+        print_str += 'ID: {}\n'.format(self.id_)
+        for i, s in enumerate(self.sentences):
+            print_str += '{:3d} '.format(i + 1) + str(s)
+            print_str += '\n'
+        return print_str
+
+    def print_with_wer(self):
+        """Returns a string representation of the object."""
+        # This might be relatively slow because of all the string concatenation
+        print_str = ''
         best = nbest_best_sentence(self)
         best_rank = self.sentences.index(best)
         print_str += 'ID: {} (#{} is best)\n'.format(self.id_, best_rank)
-        # print_str += 'ID: {}\n'.format(self.id_)
         for i, s in enumerate(self.sentences):
             print_str += '{:3d} '.format(i + 1) + str(s)
             if best_rank == i:
                 print_str += ' **'
             print_str += '\n'
-        return print_str
-
+        print(print_str)
+    
     def print_ref_hyp_best(self):
         """Print three sentences: the reference, the top hypothesis, and the lowest WER
         hypothesis on the n-best list."""
