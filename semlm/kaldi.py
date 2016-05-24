@@ -1,12 +1,12 @@
 import logging
 
 from collections import OrderedDict
-
 from semlm.nbest import NBest
 from semlm.sentence import Sentence
+import semlm.logging
 
-# logger = logging.getLogger('this_app')
-# logger.setLevel(logging.DEBUG)
+logger = logging.getLogger('semlm')
+
 
 def read_transcript_table(f):
     """Given a file, read in the transcripts into a hash table
@@ -34,13 +34,13 @@ def read_nbest_file(f):
     prev_id = None
     id_ = None
     while True:
-        print('|NBESTS| = {}'.format(len(nbests)))
-        print('|NBEST| = {}'.format(len(nbest)))
+        logger.debug('|NBESTS| = {}'.format(len(nbests)))
+        logger.debug('|NBEST| = {}'.format(len(nbest)))
         entry = read_nbest_entry_lines(f)  # this is a sentence, which is spread across several lines
-        print('ENTRY: ' + str(entry))
+        logger.debug('ENTRY: ' + str(entry))
         if not entry:
             nbests.append(NBest(nbest, id_))
-            # print(nbest)
+            logger.debug(nbest)
             break
             # yield NBest(nbest, id_)
         id_ = entry[0]
