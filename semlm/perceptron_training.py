@@ -1,11 +1,11 @@
 
 
 def generate_training_pairs(nbests):
-    """Generate pairs of sentences where the pair can be used as a training example."""
+    """Generate pairs of sentences where the pair can be used as a training example.
+    This is a naive, non-scalable way to do this."""
     pairs=[]
     classifications = []
     for nbest in nbests:
-        print(len(pairs))
         for s1 in nbest.sentences:
             for s2 in nbest.sentences:
                 if s1 is not s2:
@@ -16,6 +16,7 @@ def generate_training_pairs(nbests):
 
 
 def pair_to_dict(pair):
+    """Convert unigrams to dicts of features.  Valued at 1 and -1."""
     features = {}
     for word in pair[0].words:
         features[word] = 1

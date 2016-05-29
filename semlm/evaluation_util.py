@@ -1,9 +1,11 @@
 from collections import OrderedDict
 
 from semlm.evaluation import Evaluation
+
 from editdistance.editdistance import edit_distance
-from asr_evaluation.asr_evaluation import print_diff as eval_print_diff
 from editdistance.editdistance import SequenceMatcher
+from asr_evaluation.asr_evaluation import print_diff as eval_print_diff
+
 
 REFERENCES = OrderedDict()
 
@@ -46,3 +48,4 @@ def sum_evals(evals):
         return evals[0]
     else:
         return sum(evals[1:], evals[0])
+

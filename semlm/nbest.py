@@ -1,4 +1,5 @@
 import sys
+
 from semlm.sentence import Sentence
 from semlm.evaluation_util import get_global_reference
 from semlm.evaluation_util import print_diff
