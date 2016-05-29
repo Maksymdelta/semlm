@@ -1,6 +1,4 @@
 
-
-
 def pair_to_dict(pair):
     """Convert unigrams to dicts of features.  Valued at 1 and -1."""
     features = {}

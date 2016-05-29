@@ -1,4 +1,3 @@
-
 from sklearn.metrics import classification_report
 
 def print_feature_weights(model, vec):

@@ -15,7 +15,6 @@ class Sentence:
         sentence_str = ' '.join(self.words).lower()
         return sentence_str
 
-
     def wer(self):
         if self.eval_:
             return self.eval_.wer()
