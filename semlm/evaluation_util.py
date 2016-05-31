@@ -48,4 +48,3 @@ def sum_evals(evals):
         return evals[0]
     else:
         return sum(evals[1:], evals[0])
-

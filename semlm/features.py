@@ -7,3 +7,11 @@ def pair_to_dict(pair):
     for word in pair[1].words:
         features[word] = -1
     return features
+
+class FeatureExtractor():
+    pass
+
+class UnigramFE(FeatureExtractor):
+
+    def extract(self, s):
+        return s.words.copy()

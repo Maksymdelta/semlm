@@ -49,7 +49,7 @@ def evals_by_depth(nbests, n=100):
     for i in range(n):
         evals = []
         for nbest in nbests:
-            evals.append(nbest_oracle_eval(nbest, i+1))
+            evals.append(nbest_oracle_eval(nbest, i + 1))
         evals_by_depth[i] = sum_evals(evals)
     return evals_by_depth
 
@@ -81,7 +81,7 @@ def print_nbest(nbest, acscore=True, lmscore=True, tscore=True, tscore_wip=False
                 print_str += ' **'
             print_str += '\n'
     print(print_str)
-    
+
 def print_nbest_ref_hyp_best(nbest):
     """Print three sentences: the reference, the top hypothesis, and the lowest WER
     hypothesis on the n-best list."""

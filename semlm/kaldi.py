@@ -54,7 +54,7 @@ def read_nbest_file(f):
         s = entry_lines_to_sentence(entry)
         nbest.append(s)
     return nbests
-        
+
 def read_nbest_entry_lines(f):
     entry_lines = []
     while True:
@@ -97,7 +97,7 @@ def entry_lines_to_sentence(lines):
 #     while True:
 #         entry = read_nbest_entry_lines(f)  # this is a sentence.
 #         # logger.info('TEST')
-#         # print(entry)        
+#         # print(entry)
 #         if not entry:
 #             # print(nbest)
 #             break
