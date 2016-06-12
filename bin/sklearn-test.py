@@ -75,8 +75,8 @@ def main():
 
     # Do feature extraction
     vec = DictVectorizer()
-    # feature_array = vec.fit_transform(feature_dicts).toarray() # Each item is a training example
 
+    # This is building a "csr_matrix" object
     vec.fit(feature_dicts)
     print(type(vec).__name__)
     print(vec)
