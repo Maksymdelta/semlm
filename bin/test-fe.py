@@ -7,7 +7,7 @@ from scipy.sparse import lil_matrix
 from scipy import int8
 
 
-# Let's just use the DictVectorizer() for now.
+# Let's just use the DictVectorizer() for now!
 
 def main():
     # Arg parser
