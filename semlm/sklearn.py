@@ -1,6 +1,11 @@
 from sklearn.metrics import classification_report
 
+
+### Mostly for learning how sklearn works.
+
 def print_feature_weights(model, vec):
+    """Given a model and a vectorized example file, print all the feature weights.
+    Printing procedure is a little different between classification and regression."""
     print('Feature weights:')
     try:
         # For perceptron, SGD, logistic regression, etc.:
@@ -13,6 +18,8 @@ def print_feature_weights(model, vec):
 
 
 def evaluate_model(model, data):
+    """Given a model and some data, show the first 10 classifications and references,
+    the accuracy, and the classification report."""
     feature_array, classifications = data
     predictions = model.predict(feature_array)
     print('First 10 predictions: {}'.format(predictions[:10]))

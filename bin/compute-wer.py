@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 
 import argparse
-from semlm.kaldi import read_nbests
-from semlm.kaldi import read_nbest_files
 from semlm.kaldi import read_transcript
 from semlm.kaldi import read_transcript_table
 from semlm.evaluation_util import evaluate
@@ -13,6 +11,7 @@ def main():
     parser.add_argument("hyp_file")
     args = parser.parse_args()
 
+    print(args.ref_file)
     ref_table = read_transcript_table(args.ref_file)
     hyps = read_transcript(args.hyp_file)
 

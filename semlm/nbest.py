@@ -1,5 +1,7 @@
 import sys
 
+from io import StringIO
+
 from semlm.sentence import Sentence
 from semlm.evaluation_util import get_global_reference
 from semlm.evaluation_util import print_diff
@@ -20,27 +22,24 @@ class NBest:
 
     def __str__(self):
         """Returns a string representation of the object."""
-        # This might be relatively slow because of all the string concatenation
-        print_str = ''
-        print_str += 'ID: {}\n'.format(self.id_)
+        print_str = StringIO()
+        print_str.write('ID: {}\n'.format(self.id_))
         for i, s in enumerate(self.sentences):
-            print_str += '{:3d} '.format(i + 1) + str(s)
-            print_str += '\n'
-        return print_str
+            print_str.write('{:3d} {}\n'.format(i + 1, s))
+        return print_str.getvalue()
 
     def print_with_wer(self):
         """Returns a string representation of the object."""
-        # This might be relatively slow because of all the string concatenation
-        print_str = ''
         best = nbest_best_sentence(self)
         best_rank = self.sentences.index(best)
-        print_str += 'ID: {} (#{} is best)\n'.format(self.id_, best_rank)
+        print_str = StringIO()
+        print_str.write('ID: {} (#{} is best)\n'.format(self.id_, best_rank))
         for i, s in enumerate(self.sentences):
-            print_str += '{:3d} '.format(i + 1) + str(s)
+            print_str.write('{:3d} {}'.format(i + 1, s))
             if best_rank == i:
-                print_str += ' **'
-            print_str += '\n'
-        print(print_str)
+                print_str.write(' **')
+            print_str.write('\n')
+        print(print_str.getvalue())
     
     def print_ref_hyp_best(self):
         """Print three sentences: the reference, the top hypothesis, and the lowest WER
