@@ -1,13 +1,19 @@
 from collections import OrderedDict
 
 from semlm.evaluation import Evaluation
-
 from editdistance.editdistance import edit_distance
 from editdistance.editdistance import SequenceMatcher
 from asr_evaluation.asr_evaluation import print_diff as eval_print_diff
 
-
 REFERENCES = OrderedDict()
+
+def evaluate_hyps(hyps, ref_table):
+    evals = []
+    for hyp in hyps:
+        ref = ref_table[hyp.id_]
+        eval_ = evaluate(ref_table, hyp)
+        evals.append(eval_)
+    return sum(evals[1:], evals[0])
 
 def sentence_editdistance(s1, s2):
     """Given two 'sentence' objects compute the edit distance and

@@ -4,25 +4,24 @@ import argparse
 from semlm.kaldi import read_transcript
 from semlm.kaldi import read_transcript_table
 from semlm.evaluation_util import evaluate
+from semlm.evaluation_util import evaluate_hyps
+
+
+def arg_parser():
+    desc="""Compute the WER between two 'transcript'-like files.
+    The first token of each line should be the ID.  The order of the
+    lines doesn't matter."""
+    parser = argparse.ArgumentParser(description=desc)
+    parser.add_argument("ref_file", type=argparse.FileType('r'))
+    parser.add_argument("hyp_file", type=argparse.FileType('r'))
+    args = parser.parse_args()
+    return args
 
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("ref_file")
-    parser.add_argument("hyp_file")
-    args = parser.parse_args()
-
-    print(args.ref_file)
+    args = arg_parser()
     ref_table = read_transcript_table(args.ref_file)
     hyps = read_transcript(args.hyp_file)
-
-    errs = 0
-    evals = []
-    for hyp in hyps:
-        ref = ref_table[hyp.id_]
-        eval_ = evaluate(ref_table, hyp)
-        evals.append(eval_)
-
-    print(sum(evals[1:], evals[0]))
+    print(evaluate_hyps(hyps, ref_table))
 
 if __name__ == "__main__":
     main()
