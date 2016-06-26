@@ -11,9 +11,6 @@ class Testing(unittest.TestCase):
     ref_file = "test/data/librispeech1/dev_clean.ref"
     hyp_file = "test/data/librispeech1/dev_clean.14_0.5.tra.txt"
     
-    def test_testing(self):
-        self.assertEqual('foo'.upper(), 'FOO')
-
     # Make sure we can read the main (3) types of files.
     def test_read_nbest(self):
         with open(self.nbest_file) as f:
@@ -30,7 +27,7 @@ class Testing(unittest.TestCase):
             refs = read_transcript(f)
             self.assertTrue(len(refs) == 2703)
 
-    # This compares a hyp file to a ref file--This one is probably too slow
+    # This compares a hyp file to a ref file--this test is probably too slow
     def test_evaluation(self):
         with open(self.hyp_file) as h, open(self.ref_file) as r:
             ref_table = read_transcript_table(r)
