@@ -1,7 +1,6 @@
 #~/bin/sh -x
 
 n=100
-# acoustic_scale=0.1
 
 # This is 1/14
 acoustic_scale=0.07
