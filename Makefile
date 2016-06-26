@@ -9,7 +9,7 @@ clean:
 	rm -rf build
 
 test:
-	python -m unittest discover test
+	python3 -m unittest discover test
 
 coverage:
 	python3 -m coverage erase

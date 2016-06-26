@@ -7,9 +7,9 @@ from semlm.evaluation_util import evaluate
 
 class Testing(unittest.TestCase):
 
-    nbest_file = "tests/data/librispeech1/lat.1.nbest.txt"
-    ref_file = "tests/data/librispeech1/dev_clean.ref"
-    hyp_file = "tests/data/librispeech1/dev_clean.14_0.5.tra.txt"
+    nbest_file = "test/data/librispeech1/lat.1.nbest.txt"
+    ref_file = "test/data/librispeech1/dev_clean.ref"
+    hyp_file = "test/data/librispeech1/dev_clean.14_0.5.tra.txt"
     
     def test_testing(self):
         self.assertEqual('foo'.upper(), 'FOO')
