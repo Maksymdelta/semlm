@@ -2,4 +2,4 @@
 semlm
 ============
 
-Semantic language modeling.  Should not be publicized.
+Semantic language modeling.

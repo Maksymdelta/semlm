@@ -1,8 +1,7 @@
 from collections import OrderedDict
 
 from semlm.evaluation import Evaluation
-from editdistance.editdistance import edit_distance
-from editdistance.editdistance import SequenceMatcher
+from edit_distance import SequenceMatcher, edit_distance
 from asr_evaluation.asr_evaluation import print_diff as eval_print_diff
 
 REFERENCES = OrderedDict()

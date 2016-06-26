@@ -4,9 +4,10 @@ clean:
 	python setup.py clean
 	rm -f MANIFEST
 	rm -rf dist
-	rm -f *.pyc
-	rm -rf edit_distance.egg-info/
+	rm -rf semlm.egg-info/
 	rm -rf build
+	# find . -name __pycache__ -exec rm -rf '{}' \;
+	find . -name *.pyc -exec rm -rf '{}' \;
 
 test:
 	python3 -m unittest discover test
@@ -22,4 +23,3 @@ gendoc:
 
 showdoc:
 	pydoc ../semlm/*
-
