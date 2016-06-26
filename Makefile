@@ -10,7 +10,7 @@ clean:
 	rm -rf htmlcov
 
 test:
-	python3 -m unittest discover test -v
+	python3 setup.py test
 
 coverage:
 	python3 -m coverage erase
@@ -18,8 +18,8 @@ coverage:
 	python3 -m coverage html
 	python3 -m coverage report
 
-gendoc:
-	pydoc -w `find ../semlm -name '*.py'`
+doc:
+	pydoc -w `find semlm -name '*.py'`
 
 showdoc:
-	pydoc ../semlm/*
+	pydoc `find semlm -name '*.py'`
