@@ -1,9 +1,10 @@
 import logging
 
 from collections import OrderedDict
+
+import semlm.logging
 from semlm.nbest import NBest
 from semlm.sentence import Sentence
-import semlm.logging
 
 logger = logging.getLogger('semlm')
 

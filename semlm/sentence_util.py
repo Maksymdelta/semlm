@@ -24,5 +24,4 @@ def print_sentence(s, acscore=True, lmscore=True, tscore=True, tscore_wip=False,
         output.write('{:5.0%}  '.format(s.eval_.wer()))
 
     output.write(sentence_str)
-    # print(output.getvalue())
     return output.getvalue()
