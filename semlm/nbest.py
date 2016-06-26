@@ -40,7 +40,7 @@ class NBest:
                 print_str.write(' **')
             print_str.write('\n')
         print(print_str.getvalue())
-    
+
     def print_ref_hyp_best(self):
         """Print three sentences: the reference, the top hypothesis, and the lowest WER
         hypothesis on the n-best list."""

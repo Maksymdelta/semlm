@@ -1,10 +1,11 @@
 from io import StringIO
 
-def print_sentence(s, acscore=True, lmscore=True, tscore=True, tscore_wip=False, wcount=False, lmwt=10.0, maxwords=None, wer=True):
+def print_sentence(s, acscore=True, lmscore=True, tscore=True, tscore_wip=False,
+                   wcount=False, lmwt=10.0, maxwords=None, wer=True):
     """Prints all sentence scores including acoustic, lm, overall, etc."""
     output = StringIO()
     number_template = '{:8,.2f}'
-    spaces=2
+    spaces = 2
     if maxwords:
         sentence_str = ' '.join(s.words[:maxwords]).lower()
     else:
@@ -21,7 +22,7 @@ def print_sentence(s, acscore=True, lmscore=True, tscore=True, tscore_wip=False,
         output.write('{:5}'.format(len(s.words)) + ' ' * spaces)
     if wer and s.eval_:
         output.write('{:5.0%}  '.format(s.eval_.wer()))
-        
-    output.write(sentence_str)        
-    #print(output.getvalue())
+
+    output.write(sentence_str)
+    # print(output.getvalue())
     return output.getvalue()

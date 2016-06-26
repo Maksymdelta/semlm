@@ -53,8 +53,8 @@ def evals_by_depth(nbests, n=100):
         evals_by_depth[i] = sum_evals(evals)
     return evals_by_depth
 
-def print_nbest(nbest, acscore=True, lmscore=True, tscore=True, tscore_wip=False, wcount=False, lmwt=10.0, maxwords=None,
-                print_instances=False):
+def print_nbest(nbest, acscore=True, lmscore=True, tscore=True, tscore_wip=False,
+                wcount=False, lmwt=10.0, maxwords=None, print_instances=False):
     """Returns a string representation of the object."""
     # This might be relatively slow because of all the string concatenation
     print_str = ''
@@ -71,11 +71,12 @@ def print_nbest(nbest, acscore=True, lmscore=True, tscore=True, tscore_wip=False
         print_str += '    No reference found.\n'
     print_str += 'HYP:  ' + str(hyp) + '\n'
     # print_str += 'BEST: '.format(best_rank + 1) + str(best) + '\n'
-    print_str += 'BEST: ' + str(best) + '({})\n'.format(best_rank +1)
+    print_str += 'BEST: ' + str(best) + '({})\n'.format(best_rank + 1)
 
     if print_instances:
         for i, s in enumerate(nbest.sentences):
-            sentence_str = print_sentence(s, acscore=acscore, lmscore=lmscore, tscore=tscore, tscore_wip=tscore_wip, wcount=wcount, lmwt=lmwt, maxwords=maxwords)
+            sentence_str = print_sentence(s, acscore=acscore, lmscore=lmscore, tscore=tscore,
+                                          tscore_wip=tscore_wip, wcount=wcount, lmwt=lmwt, maxwords=maxwords)
             print_str += '{:3d} '.format(i + 1) + sentence_str
             if best_rank == i:
                 print_str += ' **'
@@ -92,4 +93,3 @@ def print_nbest_ref_hyp_best(nbest):
     print_diff(ref, best, prefix1='REF: ', prefix2='BEST:')
     print_diff(best, hyp, prefix1='BEST:', prefix2='HYP: ')
     print('=' * 60)
-

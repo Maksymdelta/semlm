@@ -3,7 +3,7 @@
 def generate_training_pairs(nbests):
     """Generate pairs of sentences where the pair can be used as a training example.
     This is a naive, non-scalable way to do this."""
-    pairs=[]
+    pairs = []
     classifications = []
     for nbest in nbests:
         for s1 in nbest.sentences:

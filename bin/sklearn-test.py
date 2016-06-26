@@ -44,7 +44,6 @@ def print_eval(nbests):
     print('Oracle eval:')
     print(evaluate_nbests_oracle(nbests))
 
-    
 def main():
     # Arg parser
     parser = argparse.ArgumentParser()
@@ -54,7 +53,7 @@ def main():
     colorama.init()
     # Read the n-best lists
     nbests = list(read_nbest_file(args.nbest_file))
-  
+
     # Read in the references
     load_references(args.ref_file)
     print('# of n-bests: {}'.format(len(nbests)))
@@ -83,7 +82,7 @@ def main():
     print(vec.vocabulary_)
     print(vec.get_params())
     exit
-    
+
     features = vec.fit_transform(feature_dicts)
     print(type(features).__name__)
     print(features)
@@ -99,6 +98,5 @@ def main():
     evaluate_model(model, (feature_array, classifications))
 
 
-            
 if __name__ == "__main__":
     main()

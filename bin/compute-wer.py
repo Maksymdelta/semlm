@@ -8,7 +8,7 @@ from semlm.evaluation_util import evaluate_hyps
 
 
 def arg_parser():
-    desc="""Compute the WER between two 'transcript'-like files.
+    desc = """Compute the WER between two 'transcript'-like files.
     The first token of each line should be the ID.  The order of the
     lines doesn't matter."""
     parser = argparse.ArgumentParser(description=desc)

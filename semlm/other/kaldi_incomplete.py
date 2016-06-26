@@ -19,7 +19,6 @@ def read_nbest_file(f):
         s = entry_lines_to_sentence(entry)
         print(s)
 
-
 def split_nbest_lines(lines):
     line_data = map(str.split, lines)
     line_data = map(lambda x: x if len(x) != 4 else (x[:3] + x[3].split(',')), line_data)
@@ -50,4 +49,4 @@ def validate_line_data(line_data):
     assert(len(line_data[0]) == 1)
     for i, data in enumerate(line_data[1:]):
         assert(data[0] == i)
-        assert(data[1] == i+1)
+        assert(data[1] == i + 1)

@@ -28,13 +28,13 @@ def main():
     #         print(features)
 
     # matrix = csr_matrix((3,4), dtype=int8)
-    matrix = lil_matrix((3,4), dtype=int8)
+    matrix = lil_matrix((3, 4), dtype=int8)
     # print(matrix.toarray())
     # print(matrix[0][0])
-    matrix[0,0] = 1
-    print(matrix[0,0])
+    matrix[0, 0] = 1
+    print(matrix[0, 0])
     print(matrix.toarray())
     print(matrix)
-    
+
 if __name__ == "__main__":
     main()

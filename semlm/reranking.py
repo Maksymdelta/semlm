@@ -1,6 +1,5 @@
 
 
-
 def rerank_nbests(nbests, func):
     """Given a a list of nbests and a function, rerank all the nbests
     with the given function."""
