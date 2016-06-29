@@ -27,7 +27,7 @@ from semlm.nbest_util import evaluate_nbests_oracle
 from semlm.sentence import Sentence
 from semlm.scores import monotone
 
-from semlm.pairwise_ranking import generate_training_pairs
+from semlm.features import generate_training_pairs
 from semlm.features import pair_to_dict
 
 from semlm.sklearn import print_feature_weights
@@ -69,33 +69,27 @@ def main():
     # Convert the n-best lists to training examples.
     pairs, classifications = generate_training_pairs(nbests)
     feature_dicts = list(map(pair_to_dict, pairs))
-    print('# of training pairs generated: {}'.format(len(pairs)))
-    assert len(feature_dicts) == len(pairs)
+    print('# of training pairs:    {}'.format(len(pairs)))
+    assert(len(feature_dicts) == len(pairs) == len(classifications))
 
-    # Do feature extraction
+    # Convert features to integers
     vec = DictVectorizer()
-
-    # This is building a "csr_matrix" object
-    vec.fit(feature_dicts)
-    print(type(vec).__name__)
-    print(vec)
-    print(vec.vocabulary_)
-    print(vec.get_params())
-    exit
-
     features = vec.fit_transform(feature_dicts)
-    print(type(features).__name__)
-    print(features)
-    exit()
+    
+    # This is building a "csr_matrix" object--compressed sparse row
+    vec.fit(feature_dicts)
+    print('Vocab sample:           {}'.format(vec.feature_names_[:10]))
+    print('Params object:          {}'.format(vec.get_params()))
+    print('Feature representation: {}'.format(type(features).__name__))
+    print('Feature array dim:      {dim[0]} x {dim[1]}'.format(dim=features.shape))
 
-    # Train a perceptron or other model.
-    # Perceptron, SGDClassifier, LinearRegression
+    # Train a perceptron or other model. e.g. Perceptron, SGDClassifier, LinearRegression
     model = LogisticRegression()
-    model.fit(feature_array, classifications)
+    model.fit(features, classifications)
 
     # Print feature weights and do a pairwise evaluation of the model
     print_feature_weights(model, vec)
-    evaluate_model(model, (feature_array, classifications))
+    evaluate_model(model, (features, classifications))
 
 
 if __name__ == "__main__":

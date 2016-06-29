@@ -7,12 +7,13 @@ def print_feature_weights(model, vec):
     Printing procedure is a little different between classification and regression."""
     print('Feature weights:')
     try:
-        # For perceptron, SGD, logistic regression, etc.:
-        for name, val in zip(vec.get_feature_names(), model.coef_[0]):
+        # For perceptron, SGD, logistic regression, etc...
+        # because these are class-conditional?
+        for name, val in sorted(zip(vec.get_feature_names(), model.coef_[0]), key=lambda x: x[1], reverse=True):
             print('{:20} {:0.2f}'.format(name, val))
     except:
         # For linear regression, ridge, etc.
-        for name, val in zip(vec.get_feature_names(), model.coef_):
+        for name, val in sorted(zip(vec.get_feature_names(), model.coef_), key=lambda x: x[1], reverse=True):
             print('{:20} {:0.2f}'.format(name, val))
 
 
