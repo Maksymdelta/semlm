@@ -28,7 +28,7 @@ def evaluate_nbest(nbest, force=False):
     is already there, unless forced to.  Saves the evaluation with each sentence."""
     id_ = nbest.id_
     for s in nbest.sentences:
-        if force or s.eval_ is None:    # Only recompute the evaluation if not already computed.
+        if force or s.eval_ is None:    # Only compute the evaluation if not already computed.
             e = evaluate(semlm.evaluation_util.REFERENCES, s)
             s.eval_ = e
     return nbest.sentences[0].eval_

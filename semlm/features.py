@@ -3,14 +3,21 @@ import semlm.feature_extractor
 
 # WIP
 
+# To turn it into something we can use with sklearn have to use
+# vectorizer and call vec.transform().
+
+def features_to_dict(features, value=True):
+    dict_ = {}
+    for f in features:
+        dict_[f] = value
+    return dict_
+
 def pair_to_dict(pair):
     """Convert unigrams to dicts of features.  Valued at 1 and -1."""
     fe = semlm.feature_extractor.UnigramFE()
     features = {}
-    for word in fe.extract(pair[0]):
-        features[word] = 1
-    for word in fe.extract(pair[1]):
-        features[word] = -1
+    features.update(features_to_dict(fe.extract(pair[0]), 1))
+    features.update(features_to_dict(fe.extract(pair[1]), -1))
     return features
 
 
