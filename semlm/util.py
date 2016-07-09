@@ -1,6 +1,7 @@
 
 import semlm.evaluation_util
 
+from semlm.features import generate_training_pairs, pair_to_dict, features_to_dict
 from semlm.nbest_util import evaluate_nbests, print_nbest, evaluate_nbests_oracle
 from semlm.kaldi import read_transcript_table
 
@@ -26,3 +27,13 @@ def print_nbests(nbests):
     for nbest in nbests:
         print('NBEST:')
         print_nbest(nbest, acscore=True, lmscore=True, tscore=True, maxwords=10, print_instances=True)
+
+def extract_dict_examples(nbests, vec):
+    # Convert the n-best lists to training examples.
+    pairs, classifications = generate_training_pairs(nbests)
+    print(len(pairs))
+    print(len(classifications))
+    feature_dicts = list(map(pair_to_dict, pairs))
+    print('# of pairs:    {}'.format(len(pairs)))
+    assert(len(feature_dicts) == len(pairs) == len(classifications))
+    return feature_dicts, classifications

@@ -16,8 +16,12 @@ def pair_to_dict(pair):
     """Convert unigrams to dicts of features.  Valued at 1 and -1."""
     fe = semlm.feature_extractor.UnigramFE()
     features = {}
-    features.update(features_to_dict(fe.extract(pair[0]), 1))
-    features.update(features_to_dict(fe.extract(pair[1]), -1))
+    # features.update(features_to_dict(fe.extract(pair[0]), 1))
+    # features.update(features_to_dict(fe.extract(pair[1]), -1))
+    for f in fe.extract(pair[0]).keys():
+        features[f] = 1
+    for f in fe.extract(pair[1]).keys():
+        features[f] = -1    
     return features
 
 

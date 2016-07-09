@@ -17,44 +17,13 @@ from semlm.nbest_util import evaluate_nbests, print_nbest, evaluate_nbests_oracl
 from semlm.sentence import Sentence
 from semlm.sklearn import print_feature_weights, evaluate_model
 from semlm.scores import monotone
-from semlm.util import load_references, print_eval, print_train_test_eval, print_nbests
-
-# def load_references(f, evaluate=False):
-#     refs = read_transcript_table(f)
-#     semlm.evaluation_util.REFERENCES = refs
-
-# def print_eval(nbests):
-#     eval = evaluate_nbests(nbests)
-#     print('Eval:')
-#     print(eval)
-#     print('Oracle eval:')
-#     print(evaluate_nbests_oracle(nbests))
-
-# def print_train_test_eval(train_nbests, test_nbests):
-#     print('Train eval:')
-#     print_eval(train_nbests)
-#     print('Test eval:')
-#     print_eval(test_nbests)
-
-# def print_nbests(nbests):
-#     # Print the n-best lists
-#     for nbest in nbests:
-#         print('NBEST:')
-#         print_nbest(nbest, acscore=True, lmscore=True, tscore=True, maxwords=10, print_instances=True)
+from semlm.util import load_references, print_eval, print_train_test_eval, print_nbests, extract_dict_examples
 
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("nbest_file", type=argparse.FileType('r'))
     parser.add_argument("ref_file", type=argparse.FileType('r'))
     return parser.parse_args()
-
-def extract_dict_examples(nbests, vec):
-    # Convert the n-best lists to training examples.
-    pairs, classifications = generate_training_pairs(nbests)
-    feature_dicts = list(map(pair_to_dict, pairs))
-    print('# of pairs:    {}'.format(len(pairs)))
-    assert(len(feature_dicts) == len(pairs) == len(classifications))
-    return feature_dicts, classifications
 
 def main():
     args = parse_args()

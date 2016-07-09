@@ -17,7 +17,7 @@ from semlm.nbest_util import evaluate_nbests, print_nbest, evaluate_nbests_oracl
 from semlm.sentence import Sentence
 from semlm.sklearn import print_feature_weights, evaluate_model
 from semlm.scores import monotone
-from semlm.util import load_references, print_eval, print_train_test_eval, print_nbests
+from semlm.util import load_references, print_eval, print_train_test_eval, print_nbests, extract_dict_examples
 
 
 def parse_args():
@@ -26,72 +26,66 @@ def parse_args():
     parser.add_argument("ref_file", type=argparse.FileType('r'))
     return parser.parse_args()
 
-def extract_dict_examples(nbests, vec):
-    # Convert the n-best lists to training examples.
-    pairs, classifications = generate_training_pairs(nbests)
-    feature_dicts = list(map(pair_to_dict, pairs))
-    print('# of pairs:    {}'.format(len(pairs)))
-    assert(len(feature_dicts) == len(pairs) == len(classifications))
-    return feature_dicts, classifications
-
 def main():
     args = parse_args()
 
     colorama.init()
     # Read the n-best lists and references
     nbests = list(read_nbest_file(args.nbest_file))    
-    train_nbests = nbests[:len(nbests) // 2]
-    test_nbests = nbests[len(nbests) // 2:]
-
-    print('Training/test/total nbests: {}/{}/{}'.format(len(train_nbests),
-                                                        len(test_nbests),
-                                                        len(nbests)))
     load_references(args.ref_file)
-    
-    # Print evaluation
-    print_train_test_eval(train_nbests, test_nbests)
-    # print_nbests(nbests)
-
+    evaluate_nbests(nbests) 
     # Figure out all the features
     vec = DictVectorizer()
-    train_dict, train_class = extract_dict_examples(train_nbests, vec)
-    test_dict, test_class = extract_dict_examples(test_nbests, vec)
+    feature_dict, classes = extract_dict_examples(nbests, vec)
+    
     # This is building a "csr_matrix" object--compressed sparse row
-    vec.fit(train_dict + test_dict)
+    vec.fit(feature_dict)
     print(vec)
-    train_feat = vec.transform(train_dict)
-    test_feat = vec.transform(test_dict)
+    print(dir(vec))
+    data = vec.transform(feature_dict)
+    # test_feat = vec.transform(test_dict)
 
     print('Vocab sample:            {}'.format(vec.feature_names_[:10]))
+
+    # This is supposed to be a mapping from features to values
     print('Params object:           {}'.format(vec.get_params()))
-    print('Feature representation:  {}'.format(type(train_feat).__name__))
-    print('Feature representation:  {}'.format(type(test_feat).__name__))
-    print('Train feature array dim: {dim[0]} x {dim[1]}'.format(dim=train_feat.shape))
-    print('Test feature array dim:  {dim[0]} x {dim[1]}'.format(dim=test_feat.shape))
+    print('Feature representation:  {}'.format(type(data).__name__))
+    print('Train feature array dim: {dim[0]} x {dim[1]}'.format(dim=data.shape))
 
-    # Train a perceptron or other model. e.g. Perceptron, SGDClassifier, LinearRegression
-    print('Training model:')
-    # model = LogisticRegression(verbose=10) # penalty='l2')
-    model = Perceptron() # penalty='l2')
-    model.fit(train_feat, train_class)
+    print('Params...')
+    # We don't care about params.  Just vocabulary_ and feature_names_
+    
+    s = nbests[0].sentences[0]
 
-    # Print feature weights and do a pairwise evaluation of the model on training data.
-    # print_feature_weights(model, vec)
-    print('Eval on train data:')
-    evaluate_model(model, (train_feat, train_class))
-    print('Eval on test data:')
-    evaluate_model(model, (test_feat, test_class))
-
-    s = train_nbests[0].sentences[0]
-
+    # This is my representation of features.
     fe = UnigramFE()
     features = fe.extract(s)
+    print('Features:')
     print(features)
-    feat_vec = vec.transform(features_to_dict(features))
+
+    # This is a dict representation of features
+    feat_dict = features_to_dict(features)  # True values go to 1.0
+    print('Feature dict:')
+    print(feat_dict)
+
+    # This is a sklearn/numpy representation of features
+    feat_vec = vec.transform(feat_dict)
+    print('sklearn features:')
     print(feat_vec)
     print(type(feat_vec).__name__)
+    print(dir(feat_vec))
+    print(feat_vec.shape)
+    print(feat_vec.data)
 
-    print(vec.feature_names_[33])
+    # .indicies has the feature IDs. we can use them but we're ignoring the 'value'
+    print(feat_vec.indices)
+    print(feat_vec.indptr)
+
+    for i in feat_vec.indices:
+        print(vec.feature_names_[i])
+    
+    
+    # print(vec.feature_names_[33])
     
 
     
