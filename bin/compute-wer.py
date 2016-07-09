@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 
+
+# This should be in ASR evaluation?
+
 import argparse
 from semlm.kaldi import read_transcript
 from semlm.kaldi import read_transcript_table

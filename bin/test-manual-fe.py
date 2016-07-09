@@ -1,5 +1,7 @@
 import argparse
 
+# Don't need this any more
+
 from semlm.kaldi import read_nbest_file
 from semlm.features import UnigramFE
 from scipy.sparse import csr_matrix

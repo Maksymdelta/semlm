@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+## An example of how we could do pairwise training (probably irrelevant now).
+
 import argparse
 import operator
 import logging

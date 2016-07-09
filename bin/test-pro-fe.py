@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+# This is the main logic I'm working on now.
+
 import argparse
 import operator
 import logging
@@ -40,8 +42,8 @@ def main():
     fe = UnigramFE()
     pro_fe = ProFE()    
 
+    # Create train/test examples...
     examples = []
-    
     for nbest in nbests:
         for s1, s2 in itertools.combinations(nbest.sentences, 2):
             features = pro_fe.extract(s1, s2, fe)
@@ -50,16 +52,22 @@ def main():
             examples.append(example)
             # print(example)
 
-    print(len(examples))
-
+    # Next(ish), we want to encapsulate the following code.
+    
+    # Converts the Example objects to sk-learn objects (matrices)
+    print('# of examples: {}'.format(len(examples)))
+    # The vectorizer wants dicts as inputs
     dicts = list(map(lambda x: x.features, examples))
-    print(dicts)
+    # Extract a vocabulary
     vec = DictVectorizer()
     vec.fit(dicts)
+    # Convert the data into the vocabulary
     data = vec.transform(dicts)
+    print('DATA:')
     print(data)
-    # This works...
-    print(vec.inverse_transform(data))
+    # This turns the data back into human-readable dicts?
+    print('Inverse transformed data (first 5):')
+    print(vec.inverse_transform(data)[:5])
     
 
 if __name__ == "__main__":

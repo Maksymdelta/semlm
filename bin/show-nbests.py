@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+# This could be in another package...
+
 import argparse
 import operator
 import logging

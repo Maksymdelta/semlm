@@ -1,9 +1,6 @@
 
 
-
 # Now I need to convert these to feature vectors and class lists...
-
-
 
 class Example():
     class_ = None

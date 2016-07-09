@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 
+# This could/should be in an asr(_evaluation) package?
+
 import argparse
 import semlm.evaluation_util
 import matplotlib.pyplot as plt
-
 
 from semlm.kaldi import read_nbest_file
 from semlm.kaldi import read_transcript_table
