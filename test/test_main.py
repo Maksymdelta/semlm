@@ -1,9 +1,9 @@
 import unittest
 
-from semlm.kaldi import read_nbest_file
-from semlm.kaldi import read_transcript_table
-from semlm.kaldi import read_transcript
-from semlm.evaluation_util import evaluate
+from asr_tools.kaldi import read_nbest_file
+from asr_tools.kaldi import read_transcript_table
+from asr_tools.kaldi import read_transcript
+from asr_tools.evaluation_util import evaluate
 
 class Testing(unittest.TestCase):
 

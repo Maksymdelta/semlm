@@ -1,13 +1,13 @@
 
-import semlm.evaluation_util
+import asr_tools.evaluation_util
 
 from semlm.features import generate_training_pairs, pair_to_dict, features_to_dict
-from semlm.nbest_util import evaluate_nbests, print_nbest, evaluate_nbests_oracle
-from semlm.kaldi import read_transcript_table
+from asr_tools.nbest_util import evaluate_nbests, print_nbest, evaluate_nbests_oracle
+from asr_tools.kaldi import read_transcript_table
 
 def load_references(f, evaluate=False):
     refs = read_transcript_table(f)
-    semlm.evaluation_util.REFERENCES = refs
+    asr_tools.evaluation_util.REFERENCES = refs
 
 def print_eval(nbests):
     eval = evaluate_nbests(nbests)

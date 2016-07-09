@@ -8,18 +8,18 @@ import logging
 import termcolor
 import colorama
 import itertools
-import semlm.evaluation_util
+import asr_tools.evaluation_util
 
 from sklearn.feature_extraction import DictVectorizer
 from sklearn.linear_model import Perceptron, SGDClassifier, LinearRegression, LogisticRegression
-from semlm.evaluation_util import evaluate
+from asr_tools.evaluation_util import evaluate
 from semlm.features import generate_training_pairs, pair_to_dict, features_to_dict
 from semlm.feature_extractor import UnigramFE, ProFE
-from semlm.kaldi import read_nbest_file, read_transcript_table
-from semlm.nbest_util import evaluate_nbests, print_nbest, evaluate_nbests_oracle
-from semlm.sentence import Sentence
+from asr_tools.kaldi import read_nbest_file, read_transcript_table
+from asr_tools.nbest_util import evaluate_nbests, print_nbest, evaluate_nbests_oracle
+from asr_tools.sentence import Sentence
 from semlm.sklearn import print_feature_weights, evaluate_model
-from semlm.scores import monotone
+from asr_tools.scores import monotone
 from semlm.util import load_references, print_eval, print_train_test_eval, print_nbests, extract_dict_examples
 from semlm.example import Example
 
