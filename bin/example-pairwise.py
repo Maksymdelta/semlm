@@ -7,25 +7,32 @@ import operator
 import logging
 import termcolor
 import colorama
-import semlm.evaluation_util
+import asr_tools.evaluation_util
+
+from asr_tools.evaluation_util import evaluate
+from asr_tools.kaldi import read_nbest_file, read_transcript_table
+from asr_tools.nbest_util import evaluate_nbests, print_nbest, evaluate_nbests_oracle
+from asr_tools.sentence import Sentence
+from asr_tools.scores import monotone
 
 from sklearn.feature_extraction import DictVectorizer
 from sklearn.linear_model import Perceptron, SGDClassifier, LinearRegression, LogisticRegression
-from semlm.evaluation_util import evaluate
+
 from semlm.features import generate_training_pairs, pair_to_dict, features_to_dict
 from semlm.feature_extractor import UnigramFE
-from semlm.kaldi import read_nbest_file, read_transcript_table
-from semlm.nbest_util import evaluate_nbests, print_nbest, evaluate_nbests_oracle
-from semlm.sentence import Sentence
-from semlm.sklearn import print_feature_weights, evaluate_model
-from semlm.scores import monotone
+from semlm.sklearn import print_feature_weights, evaluate_model, examples_to_matrix
 from semlm.util import load_references, print_eval, print_train_test_eval, print_nbests, extract_dict_examples
+from semlm.pro import create_pro_examples
+from semlm.example_util import update_vectorizer
 
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("nbest_file", type=argparse.FileType('r'))
     parser.add_argument("ref_file", type=argparse.FileType('r'))
     return parser.parse_args()
+
+
+
 
 def main():
     args = parse_args()
@@ -45,35 +52,46 @@ def main():
     print_train_test_eval(train_nbests, test_nbests)
     # print_nbests(nbests)
 
-    # Figure out all the features
-    vec = DictVectorizer()
-    train_dict, train_class = extract_dict_examples(train_nbests, vec)
-    test_dict, test_class = extract_dict_examples(test_nbests, vec)
-    # This is building a "csr_matrix" object--compressed sparse row
-    vec.fit(train_dict + test_dict)
-    print(vec)
-    train_feat = vec.transform(train_dict)
-    test_feat = vec.transform(test_dict)
 
+    # Create train/test examples
+    fe = UnigramFE()
+    train_examples = create_pro_examples(train_nbests, fe)
+    test_examples = create_pro_examples(test_nbests, fe)
+
+    # Converts the Example objects to sklearn objects (matrices)
+    print('# of train examples: {}'.format(len(train_examples)))
+    print('# of test examples: {}'.format(len(test_examples)))
+
+    vec = DictVectorizer()
+    feature_dicts = map(lambda x: x.features, train_examples + test_examples)
+    vec.fit(feature_dicts)
+    
+    train_data, train_classes = examples_to_matrix(train_examples, vec)
+    print(vec)
+    print(len(vec.vocabulary_))
+    test_data, test_classes = examples_to_matrix(test_examples, vec)
+    print(vec)
+    print(len(vec.vocabulary_))
+    
     print('Vocab sample:            {}'.format(vec.feature_names_[:10]))
     print('Params object:           {}'.format(vec.get_params()))
-    print('Feature representation:  {}'.format(type(train_feat).__name__))
-    print('Feature representation:  {}'.format(type(test_feat).__name__))
-    print('Train feature array dim: {dim[0]} x {dim[1]}'.format(dim=train_feat.shape))
-    print('Test feature array dim:  {dim[0]} x {dim[1]}'.format(dim=test_feat.shape))
-
+    print('Feature representation:  {}'.format(type(train_data).__name__))
+    print('Feature representation:  {}'.format(type(test_data).__name__))
+    print('Train feature array dim: {dim[0]} x {dim[1]}'.format(dim=train_data.shape))
+    print('Test feature array dim:  {dim[0]} x {dim[1]}'.format(dim=test_data.shape))
+    
     # Train a perceptron or other model. e.g. Perceptron, SGDClassifier, LinearRegression
     print('Training model:')
     # model = LogisticRegression(verbose=10) # penalty='l2')
     model = Perceptron() # penalty='l2')
-    model.fit(train_feat, train_class)
+    model.fit(train_data, train_classes)
 
     # Print feature weights and do a pairwise evaluation of the model on training data.
     # print_feature_weights(model, vec)
     print('Eval on train data:')
-    evaluate_model(model, (train_feat, train_class))
+    evaluate_model(model, (train_data, train_classes))
     print('Eval on test data:')
-    evaluate_model(model, (test_feat, test_class))
+    evaluate_model(model, (test_data, test_classes))
     
 
 if __name__ == "__main__":

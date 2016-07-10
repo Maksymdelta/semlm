@@ -30,13 +30,11 @@ def evaluate_model(model, data):
     print(classification_report(classifications, predictions, digits=4))
 
 
-def examples_to_matrix(examples):
+def examples_to_matrix(examples, vec):
     print('# of examples: {}'.format(len(examples)))
     # The vectorizer wants dicts as inputs
     dicts = list(map(lambda x: x.features, examples))
-    # Extract a vocabulary
-    vec = DictVectorizer()
-    vec.fit(dicts)
+    classes = list(map(lambda x: x.class_, examples))
     # Convert the data into the vocabulary
     data = vec.transform(dicts)
-    return data, vec
+    return data, classes
