@@ -1,4 +1,5 @@
 from sklearn.metrics import classification_report
+from sklearn.feature_extraction import DictVectorizer
 
 # Mostly for learning how sklearn works.
 
@@ -27,3 +28,15 @@ def evaluate_model(model, data):
     print('Accuracy: {}'.format(model.score(feature_array, classifications)))
     print('Classification report:')
     print(classification_report(classifications, predictions, digits=4))
+
+
+def examples_to_matrix(examples):
+    print('# of examples: {}'.format(len(examples)))
+    # The vectorizer wants dicts as inputs
+    dicts = list(map(lambda x: x.features, examples))
+    # Extract a vocabulary
+    vec = DictVectorizer()
+    vec.fit(dicts)
+    # Convert the data into the vocabulary
+    data = vec.transform(dicts)
+    return data, vec

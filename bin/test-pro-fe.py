@@ -10,15 +10,16 @@ import colorama
 import itertools
 import asr_tools.evaluation_util
 
-from sklearn.feature_extraction import DictVectorizer
 from sklearn.linear_model import Perceptron, SGDClassifier, LinearRegression, LogisticRegression
+from sklearn.feature_extraction import DictVectorizer
+
 from asr_tools.evaluation_util import evaluate
 from semlm.features import generate_training_pairs, pair_to_dict, features_to_dict
 from semlm.feature_extractor import UnigramFE, ProFE
 from asr_tools.kaldi import read_nbest_file, read_transcript_table
 from asr_tools.nbest_util import evaluate_nbests, print_nbest, evaluate_nbests_oracle
 from asr_tools.sentence import Sentence
-from semlm.sklearn import print_feature_weights, evaluate_model
+from semlm.sklearn import print_feature_weights, evaluate_model, examples_to_matrix
 from asr_tools.scores import monotone
 from semlm.util import load_references, print_eval, print_train_test_eval, print_nbests, extract_dict_examples
 from semlm.example import Example
@@ -28,6 +29,7 @@ def parse_args():
     parser.add_argument("nbest_file", type=argparse.FileType('r'))
     parser.add_argument("ref_file", type=argparse.FileType('r'))
     return parser.parse_args()
+
 
 def main():
     args = parse_args()
@@ -52,20 +54,13 @@ def main():
             examples.append(example)
             # print(example)
 
-    # Next(ish), we want to encapsulate the following code.
-    
     # Converts the Example objects to sk-learn objects (matrices)
     print('# of examples: {}'.format(len(examples)))
-    # The vectorizer wants dicts as inputs
-    dicts = list(map(lambda x: x.features, examples))
-    # Extract a vocabulary
-    vec = DictVectorizer()
-    vec.fit(dicts)
-    # Convert the data into the vocabulary
-    data = vec.transform(dicts)
+    vec, data = examples_to_matrix(examples)
+
+    # Do a little printing:
     print('DATA:')
     print(data)
-    # This turns the data back into human-readable dicts?
     print('Inverse transformed data (first 5):')
     print(vec.inverse_transform(data)[:5])
     
