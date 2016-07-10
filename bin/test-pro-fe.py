@@ -1,19 +1,20 @@
 #!/usr/bin/env python3
 
 import argparse
-import operator
-import logging
 import termcolor
 import colorama
 import itertools
 import asr_tools.evaluation_util
 
-from asr_tools.kaldi import read_nbest_file, read_transcript_table
+from asr_tools.kaldi import read_nbest_file
+from asr_tools.kaldi import read_transcript_table
 from asr_tools.nbest_util import evaluate_nbests
 
 from sklearn.feature_extraction import DictVectorizer
 
-from semlm.features import generate_training_pairs, pair_to_dict, features_to_dict
+from semlm.features import features_to_dict
+from semlm.features import generate_training_pairs
+from semlm.features import pair_to_dict
 from semlm.feature_extractor import UnigramFE
 from semlm.sklearn import examples_to_matrix
 from semlm.util import load_references
