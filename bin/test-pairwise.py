@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 
-## An example of how we could do pairwise training (probably irrelevant now).
-
 import argparse
 import operator
 import logging
@@ -31,7 +29,13 @@ def parse_args():
     parser.add_argument("ref_file", type=argparse.FileType('r'))
     return parser.parse_args()
 
-
+def print_info(vec, train_data, test_data):
+    print('Vocab sample:            {}'.format(vec.feature_names_[:10]))
+    print('Params object:           {}'.format(vec.get_params()))
+    print('Feature representation:  {}'.format(type(train_data).__name__))
+    print('Feature representation:  {}'.format(type(test_data).__name__))
+    print('Train feature array dim: {dim[0]} x {dim[1]}'.format(dim=train_data.shape))
+    print('Test feature array dim:  {dim[0]} x {dim[1]}'.format(dim=test_data.shape))
 
 
 def main():
@@ -42,7 +46,7 @@ def main():
     nbests = list(read_nbest_file(args.nbest_file))    
     train_nbests = nbests[:len(nbests) // 2]
     test_nbests = nbests[len(nbests) // 2:]
-
+    print()
     print('Training/test/total nbests: {}/{}/{}'.format(len(train_nbests),
                                                         len(test_nbests),
                                                         len(nbests)))
@@ -52,44 +56,39 @@ def main():
     print_train_test_eval(train_nbests, test_nbests)
     # print_nbests(nbests)
 
-
     # Create train/test examples
     fe = UnigramFE()
     train_examples = create_pro_examples(train_nbests, fe)
     test_examples = create_pro_examples(test_nbests, fe)
 
     # Converts the Example objects to sklearn objects (matrices)
+    print()
     print('# of train examples: {}'.format(len(train_examples)))
     print('# of test examples: {}'.format(len(test_examples)))
 
+    # Convert everything into feature IDs
+    # These next three should be factored out
     vec = DictVectorizer()
     feature_dicts = map(lambda x: x.features, train_examples + test_examples)
-    vec.fit(feature_dicts)
-    
+    vec.fit(feature_dicts)    
     train_data, train_classes = examples_to_matrix(train_examples, vec)
-    print(vec)
-    print(len(vec.vocabulary_))
     test_data, test_classes = examples_to_matrix(test_examples, vec)
-    print(vec)
-    print(len(vec.vocabulary_))
-    
-    print('Vocab sample:            {}'.format(vec.feature_names_[:10]))
-    print('Params object:           {}'.format(vec.get_params()))
-    print('Feature representation:  {}'.format(type(train_data).__name__))
-    print('Feature representation:  {}'.format(type(test_data).__name__))
-    print('Train feature array dim: {dim[0]} x {dim[1]}'.format(dim=train_data.shape))
-    print('Test feature array dim:  {dim[0]} x {dim[1]}'.format(dim=test_data.shape))
+
+    print_info(vec, train_data, test_data)
     
     # Train a perceptron or other model. e.g. Perceptron, SGDClassifier, LinearRegression
+    print()
     print('Training model:')
-    # model = LogisticRegression(verbose=10) # penalty='l2')
-    model = Perceptron() # penalty='l2')
+    # model = LogisticRegression(verbose=10, penalty='l2', C=1.0)
+    model = Perceptron(verbose=10, eta0=0.1, n_iter=10) # penalty='l2')
     model.fit(train_data, train_classes)
-
+    
     # Print feature weights and do a pairwise evaluation of the model on training data.
-    # print_feature_weights(model, vec)
+    print_feature_weights(model, vec)
+    print()
     print('Eval on train data:')
     evaluate_model(model, (train_data, train_classes))
+    print()
     print('Eval on test data:')
     evaluate_model(model, (test_data, test_classes))
     

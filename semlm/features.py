@@ -6,6 +6,12 @@ import semlm.feature_extractor
 # To turn it into something we can use with sklearn have to use
 # vectorizer and call vec.transform().
 
+def sent_to_fv(sentence, fe, vec):
+    feats = fe.extract(sentence)
+    feat_dicts = features_to_dict(feats)
+    fv = vec.transform(feat_dicts)
+    return fv
+
 def features_to_dict(features, value=True):
     dict_ = {}
     for f in features:
@@ -16,14 +22,11 @@ def pair_to_dict(pair):
     """Convert unigrams to dicts of features.  Valued at 1 and -1."""
     fe = semlm.feature_extractor.UnigramFE()
     features = {}
-    # features.update(features_to_dict(fe.extract(pair[0]), 1))
-    # features.update(features_to_dict(fe.extract(pair[1]), -1))
     for f in fe.extract(pair[0]).keys():
         features[f] = 1
     for f in fe.extract(pair[1]).keys():
         features[f] = -1    
     return features
-
 
 def generate_training_pairs(nbests):
     """Generate pairs of sentences where the pair can be used as a training example.

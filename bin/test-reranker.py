@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-# Another package?  Unit test?
-
 import argparse
 import operator
 import logging

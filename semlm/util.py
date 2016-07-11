@@ -17,8 +17,10 @@ def print_eval(nbests):
     print(evaluate_nbests_oracle(nbests))
 
 def print_train_test_eval(train_nbests, test_nbests):
+    print()
     print('Train eval:')
     print_eval(train_nbests)
+    print()
     print('Test eval:')
     print_eval(test_nbests)
 
