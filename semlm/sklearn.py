@@ -1,5 +1,4 @@
 from sklearn.metrics import classification_report
-from sklearn.feature_extraction import DictVectorizer
 
 
 def print_feature_weights(model, vec):

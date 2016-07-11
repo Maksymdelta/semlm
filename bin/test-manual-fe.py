@@ -4,7 +4,6 @@ import argparse
 
 from semlm.kaldi import read_nbest_file
 from semlm.features import UnigramFE
-from scipy.sparse import csr_matrix
 from scipy.sparse import lil_matrix
 from scipy import int8
 

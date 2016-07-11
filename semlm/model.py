@@ -1,6 +1,5 @@
 
 
-from semlm.feature_extractor import UnigramFE
 
 from semlm.features import sent_to_fv
 

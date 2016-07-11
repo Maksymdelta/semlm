@@ -1,28 +1,22 @@
 #!/usr/bin/env python3
 
 import argparse
-import operator
-import logging
-import termcolor
 import colorama
-import asr_tools.evaluation_util
 
-from asr_tools.evaluation_util import evaluate
-from asr_tools.kaldi import read_nbest_file, read_transcript_table
-from asr_tools.nbest_util import evaluate_nbests, print_nbest, evaluate_nbests_oracle
-from asr_tools.sentence import Sentence
-from asr_tools.scores import monotone
+from asr_tools.kaldi import read_nbest_file
 
 from sklearn.feature_extraction import DictVectorizer
-from sklearn.linear_model import Perceptron, SGDClassifier, LinearRegression, LogisticRegression
+from sklearn.linear_model import LogisticRegression
+from sklearn.linear_model import Perceptron
 
-from semlm.features import generate_training_pairs, pair_to_dict, features_to_dict, sent_to_fv
+from semlm.features import sent_to_fv
 from semlm.feature_extractor import UnigramFE
-from semlm.sklearn import print_feature_weights, evaluate_model, examples_to_matrix
-from semlm.util import load_references, print_eval, print_train_test_eval, print_nbests, extract_dict_examples
+from semlm.sklearn import examples_to_matrix
+from semlm.sklearn import print_feature_weights
+from semlm.util import load_references
+from semlm.util import print_train_test_eval
 from semlm.pro import create_pro_examples
 from semlm.model import wslm
-from semlm.example_util import update_vectorizer
 
 def parse_args():
     parser = argparse.ArgumentParser()

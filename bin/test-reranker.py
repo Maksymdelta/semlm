@@ -1,18 +1,13 @@
 #!/usr/bin/env python
 
 import argparse
-import operator
-import logging
-import termcolor
 import colorama
 import semlm.evaluation_util
 
 from semlm.kaldi import read_nbest_file
 from semlm.kaldi import read_transcript_table
-from semlm.evaluation_util import evaluate
 from semlm.nbest_util import evaluate_nbests
 from semlm.sentence import Sentence
-from semlm.scores import monotone
 from semlm.reranking import rerank_nbests
 
 

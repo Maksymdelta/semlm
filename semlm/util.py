@@ -1,7 +1,8 @@
 
 import asr_tools.evaluation_util
 
-from semlm.features import generate_training_pairs, pair_to_dict, features_to_dict
+from semlm.features import generate_training_pairs
+from semlm.features import pair_to_dict
 from asr_tools.nbest_util import evaluate_nbests, print_nbest, evaluate_nbests_oracle
 from asr_tools.kaldi import read_transcript_table
 
