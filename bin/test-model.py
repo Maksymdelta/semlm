@@ -9,7 +9,6 @@ from sklearn.feature_extraction import DictVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.linear_model import Perceptron
 
-from semlm.features import sent_to_fv
 from semlm.feature_extractor import UnigramFE
 from semlm.sklearn import examples_to_matrix
 from semlm.sklearn import print_feature_weights
@@ -89,7 +88,6 @@ def main():
 
     s = train_nbests[0].sentences[0]
     # Feature vector is a csr_matrix object (scipy)
-    fv = sent_to_fv(s, fe, vec)
     lm = wslm(vec, fe, model.coef_)
     print(lm.score(s))
 

@@ -3,7 +3,6 @@ import argparse
 # Don't need this any more
 
 from semlm.kaldi import read_nbest_file
-from semlm.features import UnigramFE
 from scipy.sparse import lil_matrix
 from scipy import int8
 
@@ -22,11 +21,6 @@ def main():
     nbests = list(read_nbest_file(args.nbest_file))
 
     print(len(nbests))
-    fe = UnigramFE()
-    # for nbest in nbests:
-    #     for s in nbest.sentences:
-    #         features = fe.extract(s)
-    #         print(features)
 
     # matrix = csr_matrix((3,4), dtype=int8)
     matrix = lil_matrix((3, 4), dtype=int8)

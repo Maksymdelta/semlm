@@ -20,7 +20,7 @@ def main():
     nbests = list(read_nbest_file(args.nbest_file))
     refs = read_transcript_table(args.ref_file)
     semlm.evaluation_util.REFERENCES = refs
-    overall_eval = evaluate_nbests(nbests)
+    evaluate_nbests(nbests)
     print('BEFORE:')
     print(evaluate_nbests(nbests))
     rerank_nbests(nbests, Sentence.score)

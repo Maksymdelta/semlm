@@ -4,8 +4,6 @@ from semlm.kaldi import read_nbest_entry_lines
 
 def read_nbest_file(f):
     "Read a Kaldi n-best file."
-    nbest = []
-    current_id = None
     while True:
         entry = read_nbest_entry_lines(f)
         entry = split_nbest_lines(entry)
@@ -15,7 +13,6 @@ def read_nbest_file(f):
         exit()
         if not entry:
             break
-        id_ = entry[0]
         s = entry_lines_to_sentence(entry)
         print(s)
 

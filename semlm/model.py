@@ -28,5 +28,4 @@ class wslm(lm):
         fv = sent_to_fv(s, self.fe, self.vec)
         # Compute a score
         product = fv.dot(self.params.T)[0][0]
-        sent_score = s.score()
         return s.score() + product
