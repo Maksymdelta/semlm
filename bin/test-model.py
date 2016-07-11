@@ -44,7 +44,7 @@ def main():
 
     colorama.init()
     # Read the n-best lists and references
-    nbests = list(read_nbest_file(args.nbest_file))    
+    nbests = list(read_nbest_file(args.nbest_file))
     train_nbests = nbests[:len(nbests) // 2]
     test_nbests = nbests[len(nbests) // 2:]
     print()
@@ -52,7 +52,7 @@ def main():
                                                         len(test_nbests),
                                                         len(nbests)))
     load_references(args.ref_file)
-    
+
     # Print evaluation
     print_train_test_eval(train_nbests, test_nbests)
 
@@ -70,29 +70,29 @@ def main():
     # These next three should be factored out
     vec = DictVectorizer()
     feature_dicts = map(lambda x: x.features, train_examples + test_examples)
-    vec.fit(feature_dicts)    
+    vec.fit(feature_dicts)
     train_data, train_classes = examples_to_matrix(train_examples, vec)
     test_data, test_classes = examples_to_matrix(test_examples, vec)
 
     print_info(vec, train_data, test_data)
-    
+
     # Train a perceptron or other model. e.g. Perceptron, SGDClassifier, LinearRegression
     print()
     print('Training model:')
     model = LogisticRegression(verbose=10, penalty='l2', C=1.0)
-    model = Perceptron(verbose=10, eta0=1.0, n_iter=10) # penalty='l2')
+    model = Perceptron(verbose=10, eta0=1.0, n_iter=10)  # penalty='l2')
     model.fit(train_data, train_classes)
-    
+
     # Print feature weights
     print_feature_weights(model, vec)
 
     # Print evaluation
     print_train_test_eval(train_nbests, test_nbests)
-    
+
     # At this point we want to create a model with the feature weights...
-    # Then we'll want to re-rank with the model, and re-evaluate    
+    # Then we'll want to re-rank with the model, and re-evaluate
     # Need a sentence to feature vector function...
-    
+
     s = train_nbests[0].sentences[0]
     # Feature vector is a csr_matrix object (scipy)
     fv = sent_to_fv(s, fe, vec)

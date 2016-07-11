@@ -33,13 +33,13 @@ def main():
 
     colorama.init()
     # Read the n-best lists and references
-    nbests = list(read_nbest_file(args.nbest_file))    
+    nbests = list(read_nbest_file(args.nbest_file))
     load_references(args.ref_file)
-    evaluate_nbests(nbests) 
+    evaluate_nbests(nbests)
     # Figure out all the features
     vec = DictVectorizer()
     feature_dict, classes = extract_dict_examples(nbests, vec)
-    
+
     # This is building a "csr_matrix" object--compressed sparse row
     vec.fit(feature_dict)
     print(vec)
@@ -56,7 +56,7 @@ def main():
 
     print('Params...')
     # We don't care about params.  Just vocabulary_ and feature_names_
-    
+
     s = nbests[0].sentences[0]
 
     # This is my representation of features.
@@ -85,12 +85,9 @@ def main():
 
     for i in feat_vec.indices:
         print(vec.feature_names_[i])
-    
-    
-    # print(vec.feature_names_[33])
-    
 
-    
+    # print(vec.feature_names_[33])
+
 
 if __name__ == "__main__":
     main()

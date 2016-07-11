@@ -25,7 +25,7 @@ def pair_to_dict(pair):
     for f in fe.extract(pair[0]).keys():
         features[f] = 1
     for f in fe.extract(pair[1]).keys():
-        features[f] = -1    
+        features[f] = -1
     return features
 
 def generate_training_pairs(nbests):
@@ -45,5 +45,3 @@ def generate_training_pairs(nbests):
                         pairs.append((s1, s2))
                         classifications.append(1 if s1.wer() < s2.wer() else -1)
     return pairs, classifications
-
-

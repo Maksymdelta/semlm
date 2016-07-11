@@ -18,12 +18,12 @@ class wslm(lm):
     vec = None
     fe = None
     params = None
-    
+
     def __init__(self, vec, fe, params):
         self.vec = vec
         self.fe = fe
         self.params = params
-    
+
     def score(self, s):
         # Extract features
         fv = sent_to_fv(s, self.fe, self.vec)

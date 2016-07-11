@@ -12,10 +12,10 @@ class FE():
 class UnigramFE(FE):
 
     binary = False
-    
+
     def __init__(self, binary=False):
-        self.binary = binary        
-    
+        self.binary = binary
+
     def extract(self, s):
         # Should return a map...
         features = defaultdict(int)
@@ -37,14 +37,10 @@ class ProFE(FE):
         for k, v in fe.extract(s2).items():
             features[k] += v * (- class_)
 
-        
-        for k,v in list(features.items()):
+        for k, v in list(features.items()):
             if v == 0:
                 features.pop(k)
 
         # we could remove zero valued features at this point...
-            
-        return features
-        
 
-        
+        return features
