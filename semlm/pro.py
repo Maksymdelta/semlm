@@ -4,9 +4,8 @@ from semlm.feature_extractor import ProFE
 from semlm.example import Example
 
 """
-Creating paired examples for pairwise ranking optimization.
+Create paired examples for pairwise ranking optimization.
 """
-
 
 def create_pro_examples(nbests, fe):
     """Create train/test examples for PRO."""

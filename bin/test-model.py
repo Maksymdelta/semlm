@@ -1,5 +1,18 @@
 #!/usr/bin/env python3
 
+"""
+Given some nbest lists and a reference...
+
+ - Split the nbests into a train and test set.
+ - Create PRO train and test sets.
+ - Vectorize everything into numeric features.
+ - Train an sk-learn model, and print pairwise accuracy.
+ - Create a WSLM.
+"""
+
+# Let's factor stuff out of this file to clean it up.
+
+
 import argparse
 import colorama
 
@@ -30,7 +43,6 @@ def print_info(vec, train_data, test_data):
     print('Feature representation:  {}'.format(type(test_data).__name__))
     print('Train feature array dim: {dim[0]} x {dim[1]}'.format(dim=train_data.shape))
     print('Test feature array dim:  {dim[0]} x {dim[1]}'.format(dim=test_data.shape))
-
 
 def main():
     args = parse_args()
@@ -97,3 +109,5 @@ def main():
     
 if __name__ == "__main__":
     main()
+
+

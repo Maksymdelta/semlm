@@ -8,6 +8,8 @@ from asr_tools.kaldi import read_transcript_table
 
 """
 Functions to help print evaluations, also a function to load ASR references.
+
+These should perhaps be in the asr-tools package.
 """
 
 def load_references(f, evaluate=False):
