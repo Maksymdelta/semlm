@@ -12,11 +12,13 @@ Given some nbest lists and a reference...
 
 # Let's factor stuff out of this file to clean it up.
 
-
 import argparse
 import colorama
 
 from asr_tools.kaldi import read_nbest_file
+from asr_tools.evaluation_util import set_global_references
+from asr_tools.util import print_train_test_eval
+
 
 from sklearn.feature_extraction import DictVectorizer
 from sklearn.linear_model import LogisticRegression
@@ -25,10 +27,9 @@ from sklearn.linear_model import Perceptron
 from semlm.feature_extractor import UnigramFE
 from semlm.sklearn import examples_to_matrix
 from semlm.sklearn import print_feature_weights
-from semlm.util import load_references
-from semlm.util import print_train_test_eval
 from semlm.pro import create_pro_examples
 from semlm.model import wslm
+
 
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -56,7 +57,7 @@ def main():
     print('Training/test/total nbests: {}/{}/{}'.format(len(train_nbests),
                                                         len(test_nbests),
                                                         len(nbests)))
-    load_references(args.ref_file)
+    set_global_references(args.ref_file)
 
     # Print evaluation
     print_train_test_eval(train_nbests, test_nbests)
