@@ -1,5 +1,9 @@
 from sklearn.metrics import classification_report
 
+"""
+sk-learn related utils.  Printing features weights and direct evaluation of a
+classifier model.
+"""
 
 def print_feature_weights(model, vec):
     """Given a model and a vectorized example file, print all the feature weights.

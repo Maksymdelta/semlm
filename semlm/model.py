@@ -1,14 +1,22 @@
 from semlm.features import sent_to_fv
 
+"""
+Classes for representing our models.
+"""
+
 class lm():
     pass
 
-# The way I'm going to use this, the scores will be added
-# to a baseline LM score (coming from the lattice/nbest)
-
 class wslm(lm):
+    """The way I'm going to use this, the scores will be added
+    to a baseline LM score (coming from the lattice/nbest).
 
-    # Feature vectorizer, feature extractor, sklearn model/parameters
+    Model requires:
+        vec - Feature vectorizer
+        fe - feature extractor
+        params - sklearn model/parameters
+    """
+
     vec = None
     fe = None
     params = None

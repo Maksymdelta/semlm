@@ -91,5 +91,9 @@ def main():
     lm = wslm(vec, fe, model.coef_)
     print(lm.score(s))
 
+    # NEXT: RERANK WITH THIS MODEL
+
+
+    
 if __name__ == "__main__":
     main()
