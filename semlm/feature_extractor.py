@@ -4,7 +4,7 @@ from collections import defaultdict
 FEs return maps.  This is in part for compatibilty with sklearn.
 """
 
-class FE():
+class FE(object):
     """Generic feature extractor."""
     pass
 

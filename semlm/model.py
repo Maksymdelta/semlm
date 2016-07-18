@@ -4,7 +4,7 @@ from semlm.features import sent_to_fv
 Classes for representing our models.
 """
 
-class lm():
+class lm(object):
     pass
 
 class wslm(lm):
@@ -27,7 +27,7 @@ class wslm(lm):
         self.params = params
 
     def score(self, s):
-        # Extract features
+        # Extract features -- re-doing this everytime which may be wasteful...
         fv = sent_to_fv(s, self.fe, self.vec)
         # Compute a score
         product = fv.dot(self.params.T)[0][0]

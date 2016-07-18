@@ -5,7 +5,7 @@ Helper functions related to feature extraction.
 """
 
 def sent_to_fv(sentence, fe, vec):
-    """To turn it into something we can use with sklearn have to use
+    """To turn a sentence into something we can use with sklearn have to use
     vectorizer and call vec.transform()."""
     feats = fe.extract(sentence)
     feat_dicts = features_to_dict(feats)

@@ -2,7 +2,7 @@
 # What is this...
 # Now I need to convert these to feature vectors and class lists...
 
-class Example():
+class Example(object):
     class_ = None
     features = None
 
