@@ -6,7 +6,21 @@ FEs return maps.  This is in part for compatibilty with sklearn.
 
 class FE(object):
     """Generic feature extractor."""
-    pass
+
+    # Feature vectorizer
+    vec = None
+
+    def set_vec(self, vec):
+        self.vec = vec
+
+    def extract_ids(self, s):
+        if not self.vec:
+            raise Exception("Can't extract feature IDs without a vectorizer.")
+        features = self.extract(s)
+        feature_ids = self.vec.transform(features)
+        # return self.vec.transform(self.extract(s))
+        return feature_ids
+
 
 class UnigramFE(FE):
     """Unigram feature extractor.  Values can be either binary (is the word
@@ -26,6 +40,8 @@ class UnigramFE(FE):
             else:
                 features[word] += 1
         return features
+
+    
 
 
 class ProFE(FE):

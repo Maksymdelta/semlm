@@ -14,6 +14,7 @@ Given some nbest lists and a reference...
 
 import argparse
 import colorama   # Not using this yet...
+import logging
 
 from sklearn.feature_extraction import DictVectorizer
 from sklearn.linear_model import LogisticRegression, Perceptron
@@ -28,7 +29,6 @@ from semlm.feature_extractor import UnigramFE
 from semlm.model import wslm
 from semlm.pro import create_pro_examples
 from semlm.sklearn import examples_to_matrix, print_feature_weights
-
 
 
 def parse_args():
@@ -49,6 +49,8 @@ def main():
     args = parse_args()
 
     colorama.init()
+    logger = logging.getLogger('asr_tools')
+    
     # Read the n-best lists and references
     nbests = list(read_nbest_file(args.nbest_file))
     train_nbests = nbests[:len(nbests) // 2]
@@ -59,7 +61,6 @@ def main():
                                                         len(nbests)))
     set_global_references(args.ref_file)
 
-
     # print(evaluate_nbests(train_nbests))
     evaluate_nbests(nbests)
 
@@ -67,6 +68,8 @@ def main():
     fe = UnigramFE()
     train_examples = create_pro_examples(train_nbests, fe)
     test_examples = create_pro_examples(test_nbests, fe)
+    logger.critical('TEST')
+        
     print('\n# of train examples: {}'.format(len(train_examples)))
     print('# of test examples: {}'.format(len(test_examples)))
 
@@ -77,7 +80,6 @@ def main():
     vec.fit(feature_dicts)
     train_data, train_classes = examples_to_matrix(train_examples, vec)
     test_data, test_classes = examples_to_matrix(test_examples, vec)
-
     print_data_info(vec, train_data, test_data)
 
     # Train a perceptron or other model. e.g. Perceptron, SGDClassifier, LinearRegression

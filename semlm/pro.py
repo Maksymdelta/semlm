@@ -18,3 +18,10 @@ def create_pro_examples(nbests, fe):
             example = Example(class_, features)
             examples.append(example)
     return examples
+
+
+def nbest_pairs(nbests):
+    for nbest in nbests:
+        for s1, s2 in itertools.combinations(nbest.sentences, 2):
+            yield (s1, s2)
+

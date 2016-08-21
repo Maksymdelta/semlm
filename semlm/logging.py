@@ -10,7 +10,8 @@ logger.setLevel(logging.INFO)
 ch = logging.StreamHandler()
 ch.setLevel(logging.DEBUG)
 # Create formatter
-formatter = logging.Formatter('%(levelname)s: %(message)s')
+# formatter = logging.Formatter('%(levelname)s: %(message)s')
+formatter = logging.Formatter('%(message)s')
 # Add formatter to console handler
 ch.setFormatter(formatter)
 # Add console handler to logger

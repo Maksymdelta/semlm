@@ -4,6 +4,7 @@ import semlm.feature_extractor
 Helper functions related to feature extraction.
 """
 
+# This should be obsolete now.
 def sent_to_fv(sentence, fe, vec):
     """To turn a sentence into something we can use with sklearn have to use
     vectorizer and call vec.transform()."""
