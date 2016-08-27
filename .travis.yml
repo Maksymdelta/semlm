@@ -5,7 +5,11 @@ python:
   - "3.5"
   - "3.5-dev"
   - "nightly"
+install:
+  - pip install -r requirements.txt 
+  - pip install coveralls
 script:
-  - nosetests
+  - python setup.py test
+  - python -m coverage run --source semlm setup.py test
 after_success:
   - coveralls
