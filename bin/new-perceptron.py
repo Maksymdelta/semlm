@@ -18,19 +18,17 @@ import logging
 import numpy as np
 
 from sklearn.feature_extraction import DictVectorizer
-from sklearn.linear_model import LogisticRegression, Perceptron
 
 from asr_tools.kaldi import read_nbest_file
 from asr_tools.evaluation_util import set_global_references
-from asr_tools.nbest_util import print_train_test_eval, evaluate_nbests
+from asr_tools.nbest_util import evaluate_nbests
 from asr_tools.reranking import rerank_nbests
-from asr_tools.sentence_util import print_sentence
 
 from semlm.feature_extractor import UnigramFE
 from semlm.model import wslm
-from semlm.pro import create_pro_examples, nbest_pairs
-from semlm.sklearn import examples_to_matrix
-from semlm.perceptron import perceptron, perceptron_update
+
+from semlm.pro import nbest_pairs
+from semlm.perceptron import perceptron
 
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -47,7 +45,7 @@ def print_data_info(vec, train_data, test_data):
     print('Test feature array dim:  {dim[0]} x {dim[1]}'.format(dim=test_data.shape))
 
 
-def feature_extract_sents(sents):
+def feature_extract_sents(sentences):
     fe = UnigramFE()
     feat_dict_list = []
     for sent in sentences:
@@ -62,12 +60,10 @@ def feature_extract_sents(sents):
 
 def main():
     args = parse_args()
-
     colorama.init()
-    logger = logging.getLogger('asr_tools')
-    
+    # logger = logging.getLogger('asr_tools')
+
     # Read the n-best lists and references
-    # It's probably better to do a 
     nbests = list(read_nbest_file(args.nbest_file))
     train_nbests = nbests[:len(nbests) // 2]
     test_nbests = nbests[len(nbests) // 2:]
@@ -77,46 +73,55 @@ def main():
                                                         len(nbests)))
     set_global_references(args.ref_file)
 
+    print("Evaluating train n-bests...")
     print(evaluate_nbests(train_nbests))
-    print(evaluate_nbests(test_nbests))    
+    print("Evaluating test n-bests...")
+    print(evaluate_nbests(test_nbests))
+    print("Evaluating all (just in case)...?")
     evaluate_nbests(nbests)
 
     # Do feature extraction.
     # Need a better abstraction for feature extraction I think...
     # Should be able to do something like extract_features(s1)
+    print("Extracting features...")
     fe = UnigramFE()
-
     features_list = []
     for nbest in nbests:
         for sentence in nbest.sentences:
             features = fe.extract(sentence)
             features_list.extend([features])
 
+    print("Vectorizing features...")
     vec = DictVectorizer()
     vec.fit(features_list)
     # Give the feature extractor the vectorizer
     fe.set_vec(vec)
 
     # Now that we have a feature vectorizer, we can extract feature IDs
+    print('Extracting feature IDs...')
     for nbest in nbests:
         for sentence in nbest.sentences:
             feature_ids = fe.extract_ids(sentence)
             sentence.feature_vector = feature_ids
             
     # Need an initial set of weights...
+    print('Initializing model...')
     params = np.zeros((1, len(vec.vocabulary_)))
     model = wslm(vec, fe, params)
 
     for e in range(1):
         print('Epoch: {}'.format(e))
+        # Creates an iterator of pairs...
         pair_iter = nbest_pairs(train_nbests)
         perceptron(pair_iter, model)
-        print('Re-ranking n-best lists')
+        print('Re-ranking n-best lists...')
         func = lambda x: model.score(x)
         # The re-ranking ops appear that they are distructive
         rerank_nbests(train_nbests, func)
         rerank_nbests(test_nbests, func)
+        print("Train evaluation:")
         print(evaluate_nbests(train_nbests))
+        print("Test evaluation:")
         print(evaluate_nbests(test_nbests))
 
     model.print_feature_weights()
