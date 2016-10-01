@@ -1,3 +1,4 @@
+import random
 import itertools
 
 from semlm.feature_extractor import ProFE
@@ -8,7 +9,7 @@ Create paired examples for pairwise ranking optimization.
 """
 
 def create_pro_examples(nbests, fe):
-    """Create train/test examples for PRO."""
+    """Create train/test examples in a LIST for PRO.  This might be a HUGE list."""
     examples = []
     pro_fe = ProFE()
     for nbest in nbests:
@@ -19,9 +20,16 @@ def create_pro_examples(nbests, fe):
             examples.append(example)
     return examples
 
-
 def nbest_pairs(nbests):
+    """Return an iterator of ALL pairs."""
     for nbest in nbests:
         for s1, s2 in itertools.combinations(nbest.sentences, 2):
             yield (s1, s2)
 
+
+def nbest_pairs_random(nbests, n):
+    """Return an iterator of n random pairs from each n-best."""
+    for nbest in nbests:
+        for i in range(n):
+            if len(nbest.sentences) > 1:
+                yield(random.sample(nbest.sentences, 2))

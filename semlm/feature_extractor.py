@@ -41,8 +41,6 @@ class UnigramFE(FE):
                 features[word] += 1
         return features
 
-    
-
 
 class ProFE(FE):
     """Takes two sentences and a feature extractor to build examples."""

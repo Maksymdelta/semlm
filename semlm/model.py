@@ -30,15 +30,20 @@ class wslm(lm):
         product = fv.dot(self.params.T)[0,0]
         return s.score() + product
 
-
-    def print_feature_weights(self):
+    def print_feature_weights(self, max=None, threshold=None):
         print('Feature weights:')
         feature_weights = []
         for i in range(len(self.vec.get_feature_names())):
             name = self.vec.get_feature_names()[i]
             val = self.params[0,i]
-            feature_weights.append((name, val))
-        for name, val in sorted(feature_weights, key=lambda x: abs(x[1]), reverse=True):
+            if not threshold or abs(val) >= threshold:
+                feature_weights.append((name, val))
+
+        items = sorted(feature_weights, key=lambda x: abs(x[1]), reverse=True)
+        if max:
+            items = items[:max]
+                
+        for name, val in items:
             print('{:20} {:>8.2f}'.format(name, val))
             
             
