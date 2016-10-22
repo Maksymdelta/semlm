@@ -42,8 +42,11 @@ class UnigramFE(FE):
         return features
 
 
+# Not really using this at the moment, but this code path explicitly creates
+# all the pairs...
 class ProFE(FE):
-    """Takes two sentences and a feature extractor to build examples."""
+    """Takes two sentences and a feature extractor to build examples.
+    'Examples' is a dict from a feature ID to a feature value."""
     
     def extract(self, s1, s2, fe):
         class_ = 1 if s1.wer() < s2.wer() else -1

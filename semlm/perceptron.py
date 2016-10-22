@@ -1,15 +1,14 @@
 from numpy.linalg import norm
 
 
-def perceptron(pairs, model, progress=False):
+def perceptron(pairs, model, print_progress=False, rate=0.01):
     counter = 0
     for pair in pairs:
         counter += 1
-        perceptron_update(pair, model)
-        if progress:
-            if counter % 10000 == 0:
-                print('{} pairs...'.format(counter))
-                print('Model - norm: {}'.format(norm(model.params)))
+        perceptron_update(pair, model, rate=rate)
+        if print_progress and counter % 10000 == 0:
+            print('{} pairs...'.format(counter))
+            print('Model - norm: {}'.format(norm(model.params)))
 
 def perceptron_update(pair, model, rate=0.01):
     s1, s2 = pair

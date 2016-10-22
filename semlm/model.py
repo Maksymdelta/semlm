@@ -4,10 +4,11 @@ from semlm.features import sent_to_fv
 Classes for representing our models.
 """
 
-class lm(object):
+class LM(object):
+    """Represents a language model."""
     pass
 
-class wslm(lm):
+class WSLM(LM):
     """The way I'm going to use this, the scores will be added
     to a baseline LM score (coming from the lattice/nbest).
 
@@ -19,16 +20,18 @@ class wslm(lm):
     vec = None
     fe = None
     params = None
+    lmwt = None
 
-    def __init__(self, vec, fe, params):
+    def __init__(self, vec, fe, params, lmwt=14):
         self.vec = vec
         self.fe = fe
         self.params = params
+        self.lmwt = lmwt
 
     def score(self, s):
         fv = s.feature_vector
         product = fv.dot(self.params.T)[0,0]
-        return s.score() + product
+        return s.score(lmwt=self.lmwt) + product
 
     def print_feature_weights(self, max=None, threshold=None):
         print('Feature weights:')
@@ -42,10 +45,6 @@ class wslm(lm):
         items = sorted(feature_weights, key=lambda x: abs(x[1]), reverse=True)
         if max:
             items = items[:max]
-                
+
         for name, val in items:
             print('{:20} {:>8.2f}'.format(name, val))
-            
-            
-
-    

@@ -26,7 +26,7 @@ from asr_tools.reranking import rerank_nbests
 from asr_tools.sentence_util import print_sentence
 
 from semlm.feature_extractor import UnigramFE
-from semlm.model import wslm
+from semlm.model import WSLM
 from semlm.pro import create_pro_examples
 from semlm.sklearn import examples_to_matrix, print_feature_weights
 
@@ -99,7 +99,7 @@ def main():
     # Then we'll want to re-rank with the model, and re-evaluate
     # Need a sentence to feature vector function...
     # Feature vector is a csr_matrix object (scipy)    
-    lm = wslm(vec, fe, model.coef_)
+    lm = WSLM(vec, fe, model.coef_)
     print('Re-ranking n-best lists')
     func = lambda x: lm.score(x)
     # The re-ranking ops appear that they are distructive
