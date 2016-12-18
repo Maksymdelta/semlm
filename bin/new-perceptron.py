@@ -16,16 +16,20 @@ import argparse
 import colorama
 import logging
 import pickle
+import cProfile, pstats, io
 
 import numpy as np
+
+from timeit import default_timer as timer
+
 from sklearn.feature_extraction import DictVectorizer
 
 from asr_tools.kaldi import read_nbest_file
 from asr_tools.evaluation_util import set_global_references
-from asr_tools.nbest_util import evaluate_nbests
+from asr_tools.nbest_util import evaluate_nbests, evaluate_nbests_oracle
 from asr_tools.reranking import rerank_nbests
 
-from semlm.feature_extractor import UnigramFE
+from semlm.feature_extractor import UnigramFE, BigramFE, CompoundFE, TrigramFE
 from semlm.model import WSLM
 
 # These are doing the hard work...
@@ -67,13 +71,17 @@ def feature_extract_sents(sentences):
     for sent in sentences:
         sent.fv = vec.transform(sent.features)
 
+def print_evaluation(train_nbests, test_nbests):
+    print('TRAIN: ' + str(evaluate_nbests(train_nbests)))
+    print('TEST:  ' + str(evaluate_nbests(test_nbests)))
+        
 def main():
     args = parse_args()
     colorama.init()
-    # logger = logging.getLogger('semlm')
-    # logger.critical('TEST')
     set_global_references(args.ref_file)
-    
+
+
+    load_start_time = timer()
     if args.load_pickle:
         print("Reading n-bests from pickle file...")
         with open(args.nbest_file, 'rb') as f:
@@ -84,11 +92,16 @@ def main():
             nbests = list(read_nbest_file(f))
             print("Evaluating n-bests...")
             evaluate_nbests(nbests)
+    load_end_time = timer()
+    print('Loading data time: {:.3f} seconds'.format(load_end_time - load_start_time))
 
     if args.save_pickle:
         with open(args.nbest_file + '.pickle', 'wb') as f:
             pickle.dump(nbests, f)
 
+    for nbest in nbests:
+        nbest.crop(20)
+    
     train_nbests = nbests[0:len(nbests) // 2]
     test_nbests = nbests[len(nbests) // 2:]
     
@@ -96,56 +109,54 @@ def main():
     print('Training/test/total nbests: {}/{}/{}'.format(len(train_nbests),
                                                         len(test_nbests),
                                                         len(nbests)))
-    print("Evaluating train n-bests...")
-    print(evaluate_nbests(train_nbests))
-    print("Evaluating test n-bests...")
-    print(evaluate_nbests(test_nbests))
+    print_evaluation(train_nbests, test_nbests)
+
+    print('Training oracle:')
+    print(evaluate_nbests_oracle(train_nbests))
+    print('Test oracle:')
+    print(evaluate_nbests_oracle(test_nbests))
     
-    # Do feature extraction.
-    # Need a better abstraction for feature extraction I think...
+    # Do feature extraction.  Need a better abstraction for feature extraction I think.
     # Should be able to do something like extract_features(s1)
     print("Extracting features...")
-    fe = UnigramFE()
-    features_list = []
-    for nbest in nbests:
+    fe = CompoundFE([UnigramFE(), BigramFE(), TrigramFE()])
+    feature_dict = {}
+    feature_start = timer()
+    for nbest in train_nbests:
         for sentence in nbest.sentences:
-            features = fe.extract(sentence)
-            features_list.extend([features])
-
-    # Now we have a giant list of dicts representing all the features in all of the n-bests
-            
-    print("Vectorizing features...")
-    vec = DictVectorizer()
-    vec.fit(features_list)
-    # Give the feature extractor the vectorizer, so it can return int features
-    fe.set_vec(vec)
-
-    # Now that we have a feature vectorizer, we can extract feature IDs
-    # This gives the sentence its IDs.
+            feature_dict.update(fe.extract(sentence))
+    fe.fix(feature_dict)
+    feature_end = timer()
+    print('Training feature extraction: {:.3f} seconds'.format(feature_end - feature_start))
+    # Now that we have a feature vectorizer, we can extract feature IDs. This gives the sentence its IDs.
     print('Extracting feature IDs...')
+    feature_start = timer()
     for nbest in nbests:
         for sentence in nbest.sentences:
             feature_ids = fe.extract_ids(sentence)
             sentence.feature_vector = feature_ids
+    feature_end = timer()
+    print('All features extraction/vectorization: {:.3f} seconds'.format(feature_end - feature_start))
             
     # Need an initial set of weights and initial model
     print('Initializing model...')
-    params = np.zeros((1, len(vec.vocabulary_)))
-    model = WSLM(vec, fe, params)
+    params = np.zeros((1, fe.size()))
+    model = WSLM(fe.vec, fe, params)
 
+    # pr = cProfile.Profile()
+    # pr.enable()
+    
     # Do an initial scoring and re-ranking
     func = lambda x: model.score(x)
     # The re-ranking ops appear that they are destructive
     rerank_nbests(train_nbests, func)
     rerank_nbests(test_nbests, func)        
     print('INITIAL EVAL:')
-    print("Train evaluation:")
-    print(evaluate_nbests(train_nbests))
-    print("Test evaluation:")
-    print(evaluate_nbests(test_nbests))
+    print_evaluation(train_nbests, test_nbests)
 
     print('=======')
     print('Beginning training...')
+    train_start = timer()
     for e in range(args.epochs):
         print('Epoch: {}'.format(e+1))
         # Creates an iterator of pairs...
@@ -160,29 +171,33 @@ def main():
             raise Exception('Unknown selection method: {}'.format(args.selection_mode))
         perceptron(pair_iter, model, rate=args.learning_rate)
         print('Re-ranking n-best lists...')
-        func = lambda x: model.score(x)
+        func = lambda x: model.score(x)    # Spending most of our time in here.  have to call it n*log(n) times to score each n-best
         # The re-ranking ops appear that they are destructive
         rerank_nbests(train_nbests, func)
         rerank_nbests(test_nbests, func)
-        print("Train evaluation:")
-        print(evaluate_nbests(train_nbests))
-        print("Test evaluation:")
-        print(evaluate_nbests(test_nbests))
+        print_evaluation(train_nbests, test_nbests)
         print('=======')
 
+    train_end = timer()
+    print('Training: {:.3f} seconds'.format(train_end - train_start))
+
+
+    # pr.disable()
+    # s = io.StringIO()
+    # sortby = 'cumulative'
+    # ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
+    # ps.print_stats()
+    # print(s.getvalue())
 
     # Do a final scoring and re-ranking
     func = lambda x: model.score(x)
-    # The re-ranking ops appear that they are distructive
+    # The re-ranking ops appear that they are destructive
     rerank_nbests(train_nbests, func)
     rerank_nbests(test_nbests, func)
 
     print('=======')
     print('FINAL EVAL:')
-    print("Train evaluation:")
-    print(evaluate_nbests(train_nbests))
-    print("Test evaluation:")
-    print(evaluate_nbests(test_nbests))
+    print_evaluation(train_nbests, test_nbests)
         
     if args.print_features:
         model.print_feature_weights(max=100)

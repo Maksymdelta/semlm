@@ -28,6 +28,9 @@ class WSLM(LM):
         self.params = params
         self.lmwt = lmwt
 
+    # Is there anything dumb and slow going on here?
+    # Don't have to recompute this if the parameter vector hasn't changed...
+    # But what's a good place to save the values?
     def score(self, s):
         fv = s.feature_vector
         product = fv.dot(self.params.T)[0,0]
@@ -47,4 +50,4 @@ class WSLM(LM):
             items = items[:max]
 
         for name, val in items:
-            print('{:20} {:>8.2f}'.format(name, val))
+            print('{:20} {:>8.2f}'.format(str(name), val))
