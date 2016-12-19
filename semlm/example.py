@@ -3,8 +3,6 @@
 # Now I need to convert these to feature vectors and class lists...
 
 class Example(object):
-    class_ = None
-    features = None
 
     def __init__(self, class_, features):
         self.class_ = class_

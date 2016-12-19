@@ -17,10 +17,6 @@ class WSLM(LM):
         fe - feature extractor
         params - sklearn model/parameters
     """
-    vec = None
-    fe = None
-    params = None
-    lmwt = None
 
     def __init__(self, vec, fe, params, lmwt=14):
         self.vec = vec

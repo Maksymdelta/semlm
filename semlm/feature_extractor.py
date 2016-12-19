@@ -18,7 +18,8 @@ class FE(object):
     """Generic feature extractor."""
 
     # Feature vectorizer--maps from features to ints
-    vec = None
+    def __init__(self):
+        vec = None
 
     def size(self):
         return len(self.vec.vocabulary_)
@@ -36,7 +37,6 @@ class FE(object):
         self.vec = vec
 
 class CompoundFE(FE):
-    fes = []
     
     def __init__(self, fes):
         self.fes = fes
@@ -55,8 +55,6 @@ class UnigramFE(FE):
     """Unigram feature extractor.  Values can be either binary (is the word
     present or not) or counts (how many times does the feature occur)."""
 
-    binary = False
-
     def __init__(self, binary=False):
         self.binary = binary
 
@@ -72,7 +70,6 @@ class UnigramFE(FE):
 
 
 class BigramFE(FE):
-    binary = False
 
     def __init__(self, binary=False):
         self.binary = binary
@@ -91,7 +88,6 @@ class BigramFE(FE):
         return features
 
 class TrigramFE(FE):
-    binary = False
 
     def __init__(self, binary=False):
         self.binary = binary
@@ -110,34 +106,26 @@ class TrigramFE(FE):
             else:
                 features[feat] += 1
         return features
-
-
-
-
-
-
-
-
     
 # class NgramFE(FE):
-    # I'm not sure if a completely general implementation is possible...?
-    # def extract(self, s):
-    #     """Returns a map."""
-    #     features = defaultdict(int)
-    #     n = 3
-    #     iterators = tee(s.words, n)
-    #     print(iterators)
-    #     for i in range(2, n):
-    #         for j in range(i):
-    #             next(iterators[i], None)
-    #     print(iterators)
-    #     for ngram in zip(iterators):
-    #         print(ngram)
-    #         if self.binary:
-    #             features[ngram] = 1
-    #         else:
-    #             features[ngram] += 1
-    #     return features
+# I'm not sure if a completely general implementation is possible...?
+# def extract(self, s):
+#     """Returns a map."""
+#     features = defaultdict(int)
+#     n = 3
+#     iterators = tee(s.words, n)
+#     print(iterators)
+#     for i in range(2, n):
+#         for j in range(i):
+#             next(iterators[i], None)
+#     print(iterators)
+#     for ngram in zip(iterators):
+#         print(ngram)
+#         if self.binary:
+#             features[ngram] = 1
+#         else:
+#             features[ngram] += 1
+#     return features
 
 
     
