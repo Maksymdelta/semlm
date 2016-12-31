@@ -14,6 +14,6 @@ setup(
         "Programming Language :: Python",
         "Topic :: Scientific/Engineering",
         "License :: OSI Approved :: BSD License"],
-    install_requires=['asr_tools', 'sklearn', 'numpy'],
+    install_requires=['asr_tools', 'sklearn', 'numpy', 'scipy'],
     test_suite='test.test_main.Testing'
 )
