@@ -1,3 +1,10 @@
 asr_tools
 sklearn
-numpy scipy matplotlib ipython jupyter pandas sympy nose
+numpy
+scipy
+matplotlib
+ipython
+jupyter
+pandas
+sympy
+nose
