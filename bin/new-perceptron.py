@@ -28,6 +28,7 @@ from asr_tools.kaldi import read_nbest_file
 from asr_tools.evaluation_util import set_global_references
 from asr_tools.nbest_util import evaluate_nbests, evaluate_nbests_oracle
 from asr_tools.reranking import rerank_nbests
+from asr_tools.util import Timer
 
 from semlm.feature_extractor import UnigramFE, BigramFE, CompoundFE, TrigramFE
 from semlm.model import WSLM
@@ -40,6 +41,7 @@ def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('nbest_file')
     parser.add_argument('ref_file', type=argparse.FileType('r'))
+    # What does this mean?  It's the data?
     pickle_group = parser.add_mutually_exclusive_group()
     pickle_group.add_argument('--load-pickle', action='store_true', default=False)
     pickle_group.add_argument('--save-pickle', action='store_true', default=False)
@@ -80,72 +82,59 @@ def main():
     colorama.init()
     set_global_references(args.ref_file)
 
-
-    load_start_time = timer()
     if args.load_pickle:
-        print("Reading n-bests from pickle file...")
-        with open(args.nbest_file, 'rb') as f:
-            nbests = pickle.load(f)
+        with Timer('Reading n-bests from pickle'):
+            with open(args.nbest_file, 'rb') as f:
+                nbests = pickle.load(f)
     else:
         with open(args.nbest_file, 'r') as f:
-            print("Reading n-bests from text...")
-            nbests = list(read_nbest_file(f))
-            print("Evaluating n-bests...")
-            evaluate_nbests(nbests)
-    load_end_time = timer()
-    print('Loading data time: {:.3f} seconds'.format(load_end_time - load_start_time))
-
+            with Timer('Reading n-bests from text'):
+                nbests = list(read_nbest_file(f))
+            with Timer('Evaluating n-bests'):
+                evaluate_nbests(nbests)
     if args.save_pickle:
         with open(args.nbest_file + '.pickle', 'wb') as f:
-            pickle.dump(nbests, f)
+            with Timer('Saving data as pickle'):
+                pickle.dump(nbests, f)
 
     for nbest in nbests:
         nbest.crop(20)
     
     train_nbests = nbests[0:len(nbests) // 2]
-    test_nbests = nbests[len(nbests) // 2:]
-    
-    print()
-    print('Training/test/total nbests: {}/{}/{}'.format(len(train_nbests),
-                                                        len(test_nbests),
-                                                        len(nbests)))
-    print_evaluation(train_nbests, test_nbests)
-
-    print('Training oracle:')
-    print(evaluate_nbests_oracle(train_nbests))
-    print('Test oracle:')
-    print(evaluate_nbests_oracle(test_nbests))
+    test_nbests = nbests[len(nbests) // 2:]    
     
     # Do feature extraction.  Need a better abstraction for feature extraction I think.
     # Should be able to do something like extract_features(s1)
-    print("Extracting features...")
     fe = CompoundFE([UnigramFE(), BigramFE(), TrigramFE()])
     feature_dict = {}
     feature_start = timer()
-    for nbest in train_nbests:
-        for sentence in nbest.sentences:
-            feature_dict.update(fe.extract(sentence))
-    fe.fix(feature_dict)
-    feature_end = timer()
-    print('Training feature extraction: {:.3f} seconds'.format(feature_end - feature_start))
+    with Timer('Extracting features'):
+        for nbest in train_nbests:
+            for sentence in nbest.sentences:
+                feature_dict.update(fe.extract(sentence))
+        fe.fix(feature_dict)
     # Now that we have a feature vectorizer, we can extract feature IDs. This gives the sentence its IDs.
-    print('Extracting feature IDs...')
-    feature_start = timer()
-    for nbest in nbests:
-        for sentence in nbest.sentences:
-            feature_ids = fe.extract_ids(sentence)
-            sentence.feature_vector = feature_ids
-    feature_end = timer()
-    print('All features extraction/vectorization: {:.3f} seconds'.format(feature_end - feature_start))
-            
-    # Need an initial set of weights and initial model
-    print('Initializing model...')
-    params = np.zeros((1, fe.size()))
-    model = WSLM(fe.vec, fe, params)
+    with Timer('Vectorizing features'):
+        for nbest in nbests:
+            for sentence in nbest.sentences:
+                feature_ids = fe.extract_ids(sentence)
+                sentence.feature_vector = feature_ids
 
-    # pr = cProfile.Profile()
-    # pr.enable()
-    
+    # Need an initial set of weights and initial model
+    with Timer('Initializing model'):
+        params = np.zeros((1, fe.size()))
+        model = WSLM(fe.vec, fe, params)
+
+    # print()
+    # print('Training/test/total nbests: {}/{}/{}'.format(len(train_nbests),
+    #                                                     len(test_nbests),
+    #                                                     len(nbests)))
+    # print_evaluation(train_nbests, test_nbests)
+    # print('Training oracle:')
+    # print(evaluate_nbests_oracle(train_nbests))
+    # print('Test oracle:')
+    # print(evaluate_nbests_oracle(test_nbests))
+
     # Do an initial scoring and re-ranking
     func = lambda x: model.score(x)
     # The re-ranking ops appear that they are destructive
@@ -180,14 +169,6 @@ def main():
 
     train_end = timer()
     print('Training: {:.3f} seconds'.format(train_end - train_start))
-
-
-    # pr.disable()
-    # s = io.StringIO()
-    # sortby = 'cumulative'
-    # ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
-    # ps.print_stats()
-    # print(s.getvalue())
 
     # Do a final scoring and re-ranking
     func = lambda x: model.score(x)
