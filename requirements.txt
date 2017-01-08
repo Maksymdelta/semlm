@@ -2,9 +2,3 @@ asr_tools
 sklearn
 numpy
 scipy==0.18.1
-matplotlib
-ipython
-jupyter
-pandas
-sympy
-nose
