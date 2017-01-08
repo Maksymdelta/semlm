@@ -5,6 +5,9 @@ python:
   - "3.5"
   - "3.5-dev"
   - "nightly"
+before_install:
+  - sudo apt-get -qq update
+  - sudo apt-get install -y libzmq-dev
 install:
   - pip install -r requirements.txt 
   - pip install coveralls
