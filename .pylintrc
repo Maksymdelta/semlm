@@ -2,11 +2,10 @@
 max-line-length=120
 
 [MESSAGES CONTROL]
-disable = fixme,too-many-arguments,logging-format-interpolation,too-many-locals,multiple-statements
+disable = fixme,too-many-arguments,logging-format-interpolation,too-many-locals,multiple-statements,too-few-public-methods
 
 [BASIC]
-# Regular expression which should only match correct argument names
+# Allow one and two character names in a number of places.
 argument-rgx=[a-z_][a-z0-9_]{0,30}$
-
-# Regular expression which should only match correct variable names
 variable-rgx=[a-z_][a-z0-9_]{0,30}$
+attr-rgx=[a-z_][a-z0-9_]{0,30}$

@@ -1,7 +1,11 @@
+"""
+Simple `numpy`-based implementation of Perceptron.
+"""
+
 from numpy.linalg import norm
 
-
 def perceptron(pairs, model, print_progress=False, rate=0.01):
+    """Train the given model on the given pairs of sentences."""
     counter = 0
     for pair in pairs:
         counter += 1
@@ -11,6 +15,8 @@ def perceptron(pairs, model, print_progress=False, rate=0.01):
             print('Model - norm: {}'.format(norm(model.params)))
 
 def perceptron_update(pair, model, rate=0.01):
+    """Perform the perceptron update on the given model using the
+    given pair of sentences."""
     s1, s2 = pair
     score1 = model.score(s1)
     score2 = model.score(s2)
