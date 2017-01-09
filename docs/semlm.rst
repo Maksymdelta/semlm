@@ -25,13 +25,6 @@ semlm.features module
     :members:
     :undoc-members:
 
-semlm.logging module
---------------------
-
-.. automodule:: semlm.logging
-    :members:
-    :undoc-members:
-
 semlm.model module
 ------------------
 
@@ -58,13 +51,5 @@ semlm.sklearn module
 --------------------
 
 .. automodule:: semlm.sklearn
-    :members:
-    :undoc-members:
-
-
-Module contents
----------------
-
-.. automodule:: semlm
     :members:
     :undoc-members:
